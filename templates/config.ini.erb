@@ -1,0 +1,65 @@
+producer = "<%= @producer %>"
+owner = "<%= @owner %>"
+
+harvestDirectory = "<%= @harvestDirectory %>"
+duplicatesDirectory = "<%= @duplicatesDirecotry %>"
+resubmitDirectory = "<%= @resubmitDirectory %>"
+stagingDirectory = "<%= @stagingDirectory %>"
+masterDirectory = "<%= @masterDirectory %>"
+wwwDirectory = "<%= @wwwDirectory %>"
+logDirectory = "<%= @logDirectory %>"
+deadImagesDirectory = "<%= @deadImagesDirectory %>"
+
+numBackupGroups = <%= @numBackupGroups %>
+
+fileTypes = "<%= @fileTypes %>"
+
+logging.stdout = "<%= @log_stdout %>"
+logging.level = "<%= @log_level %>"
+
+db0.host = "<%= @db_host %>"
+db0.user = "<%= @db_user %>"
+db0.password = "<%= @db_password %>"
+db0.dbname = "<%= @db_dbname %>"
+
+
+offload.immediate = "<%= @offload_immediate %>"
+offload.method = "<%= @offload_method %>"
+offload.command = "<%= @offload_command %>"
+offload.tar.maxSize = <%= @offload_tar_maxSize %>
+offload.tar.maxFiles = <%= @offload_tar_maxFiles %>
+offload.ftp.host = "<%= @offload_ftp_host %>"
+offload.ftp.user = "<%= @offload_ftp_user %>"
+offload.ftp.password = "<%= @offload_ftp_password %>"
+offload.ftp.passive = "<%= @offload_ftp_passive %>"
+offload.ftp.initDir = "<%= @offload_ftp_initDir %>"
+offload.ftp.reconnectPerFile = "<%= @offload_ftp_reconnectPerFile %>"
+offload.ftp.maxConnectionAttempts = <%= @offload_ftp_maxConnectionAttempts %>
+offload.ftp.maxUploadAttempts = <%= @offload_ftp_maxUploadAttempts %>
+
+
+resizeWhen.fileType = "<%= @resizeWhen_fileType %>"
+resizeWhen.imageSize = <%= @resizeWhen_imageSize %>
+imagemagick.convertCommand = "<%= @imagemagick_convertCommand %>"
+imagemagick.resizeCommand = "<%= @imagemagick_resizeCommand %>"
+imagemagick.maxErrors = <%= @imagemagick_maxErrors %>
+
+
+imagemagick.command = "<%= @imagemagick_command %>"
+imagemagick.large.size = <%= @imagemagick_large_size %>
+imagemagick.large.quality = <%= @imagemagick_large_quality %>
+imagemagick.medium.size = <%= @imagemagick_medium_size %>
+imagemagick.medium.quality = <%= @imagemagick_medium_quality %>
+imagemagick.small.size = <%= @imagemagick_small_size %>
+imagemagick.small.quality = <%= @imagemagick_small_quality %>
+imagemagick.maxErrors = <%= @imagemagick_maxErrors%>
+
+cleaner.minDaysOld = <%= @cleaner_minDaysOld %>
+cleaner.sweep = "<%= @cleaner_sweep %>"
+cleaner.unixRemove = "<%= @cleaner_unixRemove %>"
+
+mail.to = "<%= @mail_to %>"
+mail.onsuccess = ""<%= @mail_onsuccess %>"
+
+debug.maxFiles = <%= @debug_maxFiles %>
+
