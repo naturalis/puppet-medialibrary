@@ -1,4 +1,4 @@
-puppet-monophylizer
+puppet-medialibrary
 ===================
 
 Puppet module to install 
@@ -19,15 +19,7 @@ Dependencies
 
 Examples
 -------------
-Hiera yaml
-```
-sample1:
-    param: 'sampledata'
-```
-Puppet code
-```
-class { thisclass: }
-```
+
 Result
 -------------
 
@@ -42,5 +34,5 @@ The module has been tested on:
 
 Authors
 -------------
-Author Name <p.gomersbach@gmail.com>
+Author Name <atze.devries@naturalis.nl>
 
