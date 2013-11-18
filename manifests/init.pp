@@ -82,43 +82,62 @@ class medialibrary (
 
   $svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaPublisher/trunk',
   $svn_revision                       = 'latest',
+
+  $share_streets                      = false,
+  $share_activedirectory_domain       = undef,
+  $share_win_domain_admin_user        = undef,
+  $share_win_domain_admin_password    = undef,
   ) { 
 
+  
   if $operatingsystem != 'ubuntu' {
     fail('Only ubuntu is supported')
   }
-  file { "/etc/medialibrary":
-    ensure => directory,
-  }
-  
-  file { [ $base_data_dir,
-           $base_masters_dir,
-           $base_www_dir ]:    
-    ensure => directory 
-  }
-  
-  host { "${hostname}.nnm.local":
-    ip => '127.0.0.1',
-    host_aliases => [ $hostname ],
-  }
 
   package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
+
+  file { "/etc/medialibrary": ensure => directory,}
+  
+  file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]:ensure => directory }
+  
+  if $share_streets {
+   
+    host { "${hostname}":
+      name          => "${hostname}.nnm.local"
+      ip            => '127.0.0.1',
+      host_aliases  => [ $hostname ],
+    }
+  
+  }else{
+  
+    host { "${hostname}":
+      name          => $hostname
+      ip            => '127.0.0.1',
+      host_aliases  => [ $hostname ],
+    }
+  
+  }
+
   
   if $svn_revision == 'latest' {
+  
     vcsrepo { '/opt/medialibrary':
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}.nnm.local"] ],
+      require  => [ Package['subversion'],Host["${hostname}"] ],
     }
+  
   }else{
+  
       vcsrepo { '/opt/medialibrary':
       ensure   => present,
       provider => svn,
       revision => $svn_revision,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}.nnm.local"] ],
+      require  => [ Package['subversion'],Host["${hostname}"] ],
     }
+  
   }
 
   file {"/etc/medialibrary/ftp.cfg":
@@ -129,22 +148,26 @@ class medialibrary (
 
 
   create_resources('medialibrary::street', hiera('medialibrary::street', []))
-
-  class {'samba::server':
-    workgroup => 'NNM',
-    server_string => "ml-test",
-    interfaces => "eth0 lo",
-    security => 'ads',
-    require => Host["${hostname}.nnm.local"],
-  }
   
-  class { 'samba::server::ads':
-     winbind_acct    => '',
-     winbind_pass    => '',
-     realm           => '',
-     nsswitch        => true,
-     target_ou       => "Computers",
-     require         => Class['samba::server']
+
+  if $share_streets {
+  
+    class {'samba::server':
+      workgroup => 'NNM',
+      server_string => "ml-test",
+      interfaces => "eth0 lo",
+      security => 'ads',
+      require => Host["${hostname}"],
+    }
+    
+    class { 'samba::server::ads':
+       winbind_acct    => '',
+       winbind_pass    => '',
+       realm           => '',
+       nsswitch        => true,
+       target_ou       => "Computers",
+       require         => Class['samba::server']
+    }
   }
 
 }

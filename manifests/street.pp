@@ -90,46 +90,46 @@ define medialibrary::street(
     $offload_command = "tar chPf - \"%local_dir%\" | ncftpput -c -f /etc/medialib/ftp.cfg %remote_dir%/%name%"
   }
 
-  if !defined(File['/etc/medialibrary']) {
-  	file { "/etc/medialibrary":
-      ensure => directory,
-    }
-  }
-  
   $nb = $medialibrary::numBackupGroups -1
 
-  if !defined(Cron['offload']) {
+  if !defined(Augeas['cron_offload']) {
     $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
-    cron { 'offload':
-      ensure  => present,
-      command => $offload_job,
-      user    => root,
-      hour    => ['18-8'],
-      minute  => '*/10',
+    augeas{'cron_offload':
+      context => '/etc/crontab',
+      changes => $offload_job,
     }
-  }
-     
-  #if !defined(File[$medialibrary::base_data_dir]) {
-  #   file { [ $medialibrary::base_data_dir,
-  #            $medialibrary::base_masters_dir,
-  #            $medialibrary::base_www_dir ]:    
-  #    ensure => directory 
-  #  }
-  #}
 
+  }
+
+#  if !defined(Cron['offload']) {
+#    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
+#    cron { 'offload':
+#      ensure  => present,
+#      command => $offload_job,
+#      user    => root,
+#      hour    => ['18-8'],
+#      minute  => '*/10',
+#    }
+#  }
+   
   file {"/etc/medialibrary/config-${street}.ini":
     ensure  => present,
-    require => File["/etc/medialibrary"],
     content => template("medialibrary/config.ini.erb")
+    require => File['/etc/medialibrary']
   }
 
-  samba::server::share { $street:
-    comment           => "Share for ${street}",
-    path              => $publicDirectory,
-    browsable         => true,
-    writable          => true,
-    write_list       => '@"NNM\Domain Users"',
-    create_mask       => 0770,
-    directory_mask    => 0770,
+  if $medialibrary::share_streets {
+  
+    samba::server::share { $street:
+      comment           => "Share for ${street}",
+      path              => $publicDirectory,
+      browsable         => true,
+      writable          => true,
+      write_list        => '@"NNM\Domain Users"',
+      create_mask       => 0770,
+      directory_mask    => 0770,
+      require           => Class['samba::server']
+    }
+
   }
 }
