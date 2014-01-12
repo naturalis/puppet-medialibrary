@@ -1,17 +1,16 @@
 define medialibrary::street(
   $street                 = $title,
-  $producer               ,               
+  $producer               ,
   $owner                  = 'undefined',
   $fileTypes              = 'jpg,jpeg,tiff,tif,png',
   $log_stdout             = 'true',
   $log_level              = 'INFO',
   $mail_to                ,
-  $mail_onsuccess         = 'true' 
-  
+  $mail_onsuccess         = 'true'
+
 ) {
-  
+
   # variables from main (and more general)
-  
 
   $base_data_dir                      = $medialibrary::base_data_dir
   $masterDirectory                    = $medialibrary::base_www_dir
@@ -23,13 +22,13 @@ define medialibrary::street(
   $db_dbname                          = $medialibrary::db_dbname
 
   $numBackupGroups                    = $medialibrary::numBackupGroups
-  $offload_immediate                  = $medialibrary::offload_immediate 
-  $offload_method                     = $medialibrary::offload_method 
+  $offload_immediate                  = $medialibrary::offload_immediate
+  $offload_method                     = $medialibrary::offload_method
   $offload_tar_maxSize                = $medialibrary::offload_tar_maxSize
-  $offload_tar_maxFiles               = $medialibrary::offload_tar_maxFiles 
+  $offload_tar_maxFiles               = $medialibrary::offload_tar_maxFiles
   $offload_ftp_host                   = $medialibrary::offload_ftp_host
   $offload_ftp_user                   = $medialibrary::offload_ftp_user
-  $offload_ftp_password               = $medialibrary::offload_ftp_password 
+  $offload_ftp_password               = $medialibrary::offload_ftp_password
   $offload_ftp_passive                = $medialibrary::offload_ftp_passive
   $offload_ftp_reconnectPerFile       = $medialibrary::offload_ftp_reconnectPerFile
   $offload_ftp_maxConnectionAttempts  = $medialibrary::offload_ftp_maxConnectionAttempts
@@ -39,7 +38,7 @@ define medialibrary::street(
   $resizeWhen_imageSize               = $medialibrary::resizeWhen_imageSize
 
   $imagemagick_convertCommand         = $medialibrary::imagemagick_convertCommand
-  $imagemagick_resizeCommand          = $medialibrary::imagemagick_resizeCommand 
+  $imagemagick_resizeCommand          = $medialibrary::imagemagick_resizeCommand
   $imagemagick_maxErrors              = $medialibrary::imagemagick_maxErrors
 
   $imagemagick_command                = $medialibrary::imagemagick_command
@@ -71,18 +70,17 @@ define medialibrary::street(
   $logDirectory                       = "${containerDirectory}/log"
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
-  
-  file { [ $containerDirectory,
-           $publicDirectory,
-           $productionDirectory,
-           $harvestDirectory,     
-           $duplicatesDirecotry,  
-           $resubmitDirectory,    
-           $stagingDirectory,     
-           $logDirectory,         
-           $deadImagesDirectory ]:
+  file { [$containerDirectory,
+          $publicDirectory,
+          $productionDirectory,
+          $harvestDirectory,
+          $duplicatesDirecotry,
+          $resubmitDirectory,
+          $stagingDirectory,
+          $logDirectory,
+          $deadImagesDirectory ]:
     ensure => directory,
-    require => File[$medialibrary::base_data_dir],  
+    require => File[$medialibrary::base_data_dir],
   }
 
 
@@ -111,7 +109,7 @@ define medialibrary::street(
 #      minute  => '*/10',
 #    }
 #  }
-   
+
   file {"/etc/medialibrary/config-${street}.ini":
     ensure  => present,
     content => template("medialibrary/config.ini.erb")
@@ -119,7 +117,7 @@ define medialibrary::street(
   }
 
   if $medialibrary::share_streets {
-  
+
     samba::server::share { $street:
       comment           => "Share for ${street}",
       path              => $publicDirectory,
