@@ -36,7 +36,7 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 class medialibrary (
-  
+
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
@@ -87,47 +87,41 @@ class medialibrary (
   $share_activedirectory_domain       = undef,
   $share_win_domain_admin_user        = undef,
   $share_win_domain_admin_password    = undef,
-  ) { 
-
-  
-  
+  ) {
 
   package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
 
   file { "/etc/medialibrary": ensure => directory,}
-  
+
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]:ensure => directory }
-  
   if $share_streets {
-   
     host { "${hostname}":
       name          => "${hostname}.nnm.local"
       ip            => '127.0.0.1',
       host_aliases  => [ $hostname ],
     }
-  
+
   }else{
-  
     host { "${hostname}":
       name          => $hostname
       ip            => '127.0.0.1',
       host_aliases  => [ $hostname ],
     }
-  
+
   }
 
-  
+
   if $svn_revision == 'latest' {
-  
+
     vcsrepo { '/opt/medialibrary':
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
       require  => [ Package['subversion'],Host["${hostname}"] ],
     }
-  
+
   }else{
-  
+
       vcsrepo { '/opt/medialibrary':
       ensure   => present,
       provider => svn,
@@ -135,7 +129,7 @@ class medialibrary (
       source   => $svn_loc,
       require  => [ Package['subversion'],Host["${hostname}"] ],
     }
-  
+
   }
 
   file {"/etc/medialibrary/ftp.cfg":
@@ -146,25 +140,24 @@ class medialibrary (
 
 
   create_resources('medialibrary::street', hiera('medialibrary::street', []))
-  
 
   if $share_streets {
-  
+
     class {'samba::server':
-      workgroup => 'NNM',
+      workgroup     => 'NNM',
       server_string => "ml-test",
-      interfaces => "eth0 lo",
-      security => 'ads',
-      require => Host["${hostname}"],
+      interfaces    => "eth0 lo",
+      security      => 'ads',
+      require       => Host["${hostname}"],
     }
-    
+
     class { 'samba::server::ads':
-       winbind_acct    => '',
-       winbind_pass    => '',
-       realm           => '',
-       nsswitch        => true,
-       target_ou       => "Computers",
-       require         => Class['samba::server']
+      winbind_acct    => '',
+      winbind_pass    => '',
+      realm           => '',
+      nsswitch        => true,
+      target_ou       => "Computers",
+      require         => Class['samba::server']
     }
   }
 
