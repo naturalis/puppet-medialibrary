@@ -90,9 +90,7 @@ class medialibrary (
   ) { 
 
   
-  if $operatingsystem != 'ubuntu' {
-    fail('Only ubuntu is supported')
-  }
+  
 
   package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
 
