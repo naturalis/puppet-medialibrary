@@ -139,6 +139,14 @@ define medialibrary::street(
       hour    => "*",
       minute  => "*/10",
   }
+  
+  cron { "cron-${street}-www":
+      ensure  => present,
+      command => "/usr/bin/php /opt/medialibrary/cleanup.php /etc/medialibrary/config-${street}.ini",
+      user    => root,
+      hour    => "*",
+      minute  => "0",
+  }
     
 #  @samba::server::share { $street:
 #    comment           => "Share for ${street}",
