@@ -140,16 +140,16 @@ define medialibrary::street(
       minute  => "*/10",
   }
     
-  @samba::server::share { $street:
-    comment           => "Share for ${street}",
-    path              => $publicDirectory,
-    browsable         => true,
-    writable          => true,
-    write_list        => '@"NNM\Domain Users"',
-    create_mask       => 0770,
-    directory_mask    => 0770,
-    require           => Class['samba::server']
-  }
+#  @samba::server::share { $street:
+#    comment           => "Share for ${street}",
+#    path              => $publicDirectory,
+#    browsable         => true,
+#    writable          => true,
+#    write_list        => '@"NNM\Domain Users"',
+#    create_mask       => 0770,
+#    directory_mask    => 0770,
+#    require           => Class['samba::server']
+#  }
 
   
 }
