@@ -96,7 +96,7 @@ class medialibrary (
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]:ensure => directory }
   
   host { "${hostname}":
-    name          => $hostname
+    name          => $hostname,
     ip            => '127.0.0.1',
     host_aliases  => [ $hostname ],
   }
