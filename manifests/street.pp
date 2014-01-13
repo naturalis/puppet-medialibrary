@@ -140,7 +140,7 @@ define medialibrary::street(
       minute  => "*/10",
   }
   
-  cron { "cron-${street}-www":
+  cron { "cron-${street}-cleanup":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/cleanup.php /etc/medialibrary/config-${street}.ini",
       user    => root,
