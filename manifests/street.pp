@@ -90,25 +90,25 @@ define medialibrary::street(
 
   $nb = $medialibrary::numBackupGroups -1
 
-  if !defined(Augeas['cron_offload']) {
-    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
-    augeas{'cron_offload':
-      context => '/etc/crontab',
-      changes => $offload_job,
-    }
-
-  }
-
-#  if !defined(Cron['offload']) {
+#  if !defined(Augeas['cron_offload']) {
 #    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
-#    cron { 'offload':
-#      ensure  => present,
-#      command => $offload_job,
-#      user    => root,
-#      hour    => ['18-8'],
-#      minute  => '*/10',
+#    augeas{'cron_offload':
+#      context => '/etc/crontab',
+#      changes => $offload_job,
 #    }
+
 #  }
+
+  if !defined(Cron['offload']) {
+    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
+    cron { 'offload':
+      ensure  => present,
+      command => $offload_job,
+      user    => root,
+      hour    => ['18-8'],
+      minute  => '*/10',
+    }
+  }
 
   file {"/etc/medialibrary/config-${street}.ini":
     ensure  => present,
