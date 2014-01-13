@@ -116,18 +116,40 @@ define medialibrary::street(
     require => File['/etc/medialibrary'],
   }
 
-  if $medialibrary::share_streets {
-
-    samba::server::share { $street:
-      comment           => "Share for ${street}",
-      path              => $publicDirectory,
-      browsable         => true,
-      writable          => true,
-      write_list        => '@"NNM\Domain Users"',
-      create_mask       => 0770,
-      directory_mask    => 0770,
-      require           => Class['samba::server']
-    }
-
+  cron { "cron-${street}-harvest":
+      ensure  => present,
+      command => "/usr/bin/php /opt/medialibrary/harvest.php /etc/medialibrary/config-${street}.ini",
+      user    => root,
+      hour    => "*",
+      minute  => "*/10",
   }
+  
+  cron { "cron-${street}-master":
+      ensure  => present,
+      command => "/usr/bin/php /opt/medialibrary/publishmasters.php /etc/medialibrary/config-${street}.ini",
+      user    => root,
+      hour    => "*",
+      minute  => "*/10",
+  }
+  
+  cron { "cron-${street}-www":
+      ensure  => present,
+      command => "/usr/bin/php /opt/medialibrary/publishwww.php /etc/medialibrary/config-${street}.ini",
+      user    => root,
+      hour    => "*",
+      minute  => "*/10",
+  }
+    
+  @samba::server::share { $street:
+    comment           => "Share for ${street}",
+    path              => $publicDirectory,
+    browsable         => true,
+    writable          => true,
+    write_list        => '@"NNM\Domain Users"',
+    create_mask       => 0770,
+    directory_mask    => 0770,
+    require           => Class['samba::server']
+  }
+
+  
 }
