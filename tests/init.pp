@@ -13,15 +13,4 @@
 #  db0_host => 'piet'
 #  )
 
-class {'medialibrary':
-   db_host 				=> 'host',
-   db_user 				=> 'piet',
-   db_password 			=> 'kees',
-   db_dbname			=> 'dbname',
-
-   offload_ftp_host		=> 'localhost',
-   offload_ftp_user		=> 'localuser',
-   offload_ftp_password	=> 'localpassword',
-
-   svn_revision			=> 'latest'
-  }
+class {'medialibrary': }
