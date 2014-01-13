@@ -95,7 +95,7 @@ class medialibrary (
     centos, redhat: {
       singleton_resources(
         Package['subversion'],
-        Package['imagemagick'],
+        Package['ImageMagick'],
         Package['ncftp'],
         Package['php'],
         Package['php-mysql'],
