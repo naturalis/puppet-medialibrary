@@ -94,21 +94,21 @@ class medialibrary (
   file { "/etc/medialibrary": ensure => directory,}
 
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]:ensure => directory }
-  if $share_streets {
-    host { "${hostname}":
-      name          => "${hostname}.nnm.local"
-      ip            => '127.0.0.1',
-      host_aliases  => [ $hostname ],
-    }
-
-  }else{
-    host { "${hostname}":
-      name          => $hostname
-      ip            => '127.0.0.1',
-      host_aliases  => [ $hostname ],
-    }
-
-  }
+#  if $share_streets {
+#    host { "${hostname}":
+#      name          => "${hostname}.nnm.local"
+#      ip            => '127.0.0.1',
+#      host_aliases  => [ $hostname ],
+#    }
+#
+#  }else{
+#    host { "${hostname}":
+#      name          => $hostname
+#      ip            => '127.0.0.1',
+#      host_aliases  => [ $hostname ],
+#    }
+#
+#  }
 
 
   if $svn_revision == 'latest' {
