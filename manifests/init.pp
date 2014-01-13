@@ -91,6 +91,32 @@ class medialibrary (
 
   package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
 
+  case $::operatingsystem {
+    centos, redhat: {
+      singleton_resources(
+        Package['subversion'],
+        Package['imagemagick'],
+        Package['ncftp'],
+        Package['php'],
+        Package['php-mysql'],
+        Package['ftp'],
+      )
+    }
+    debian, ubuntu: {
+      singleton_resources(
+        Package['subversion'],
+        Package['imagemagick'],
+        Package['ncftp'],
+        Package['php5'],
+        Package['php5-mysql'],
+      )
+    }
+    
+    default: {
+      fail('Unrecognized operating system')
+    }
+  }
+
   file { "/etc/medialibrary": ensure => directory,}
 
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]:ensure => directory }
