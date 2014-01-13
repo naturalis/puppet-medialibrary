@@ -93,23 +93,10 @@ class medialibrary (
 
   case $::operatingsystem {
     centos, redhat: {
-      singleton_resources(
-        Package['subversion'],
-        Package['ImageMagick'],
-        Package['ncftp'],
-        Package['php'],
-        Package['php-mysql'],
-        Package['ftp'],
-      )
+      package { ['subversion','ImageMagick','ncftp','php','php-mysql']: ensure => installed, }
     }
     debian, ubuntu: {
-      singleton_resources(
-        Package['subversion'],
-        Package['imagemagick'],
-        Package['ncftp'],
-        Package['php5'],
-        Package['php5-mysql'],
-      )
+      package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
     }
     
     default: {
