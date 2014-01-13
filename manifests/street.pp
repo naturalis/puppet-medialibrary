@@ -126,7 +126,7 @@ define medialibrary::street(
   
   cron { "cron-${street}-master":
       ensure  => present,
-      command => "/usr/bin/php /opt/medialibrary/publishmasters.php /etc/medialibrary/config-${street}.ini",
+      command => "/usr/bin/php /opt/medialibrary/publish-masters.php /etc/medialibrary/config-${street}.ini",
       user    => root,
       hour    => "*",
       minute  => "*/10",
@@ -134,7 +134,7 @@ define medialibrary::street(
   
   cron { "cron-${street}-www":
       ensure  => present,
-      command => "/usr/bin/php /opt/medialibrary/publishwww.php /etc/medialibrary/config-${street}.ini",
+      command => "/usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
       user    => root,
       hour    => "*",
       minute  => "*/10",
