@@ -112,8 +112,8 @@ define medialibrary::street(
 
   file {"/etc/medialibrary/config-${street}.ini":
     ensure  => present,
-    content => template("medialibrary/config.ini.erb")
-    require => File['/etc/medialibrary']
+    content => template("medialibrary/config.ini.erb"),
+    require => File['/etc/medialibrary'],
   }
 
   if $medialibrary::share_streets {
