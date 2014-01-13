@@ -89,7 +89,7 @@ class medialibrary (
   $share_win_domain_admin_password    = undef,
   ) {
 
-  package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
+  #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
 
   case $::operatingsystem {
     centos, redhat: {
