@@ -16,10 +16,10 @@ define medialibrary::street(
   $masterDirectory                    = $medialibrary::base_www_dir
   $wwwDirectory                       = $medialibrary::base_masters_dir
 
-  $db0_host                            = $medialibrary::db_host
-  $db0_user                            = $medialibrary::db_user
-  $db0_password                        = $medialibrary::db_password
-  $db0_dbname                          = $medialibrary::db_dbname
+  $db_host                            = $medialibrary::db_host
+  $db_user                            = $medialibrary::db_user
+  $db_password                        = $medialibrary::db_password
+  $db_dbname                          = $medialibrary::db_dbname
 
   $numBackupGroups                    = $medialibrary::numBackupGroups
   $offload_immediate                  = $medialibrary::offload_immediate
