@@ -56,7 +56,7 @@ class medialibrary (
   $offload_ftp_host                   ,
   $offload_ftp_user                   ,
   $offload_ftp_password               ,
-  $offload_ftp_passive                = 'false',
+  $offload_ftp_passive                = 'true',
   $offload_ftp_reconnectPerFile       = 'false',
   $offload_ftp_maxConnectionAttempts  = 3,
   $offload_ftp_maxUploadAttempts      = 3,
