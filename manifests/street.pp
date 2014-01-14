@@ -13,8 +13,8 @@ define medialibrary::street(
   # variables from main (and more general)
 
   $base_data_dir                      = $medialibrary::base_data_dir
-  $masterDirectory                    = $medialibrary::base_www_dir
-  $wwwDirectory                       = $medialibrary::base_masters_dir
+  $masterDirectory                    = $medialibrary::base_masters_dir
+  $wwwDirectory                       = $medialibrary::base_www_dir
 
   $db_host                            = $medialibrary::db_host
   $db_user                            = $medialibrary::db_user
