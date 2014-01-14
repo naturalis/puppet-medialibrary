@@ -57,7 +57,7 @@ define medialibrary::street(
 
   #logical derivitives
 
-  $offload_ftp_initDir                = $producer
+  $offload_ftp_initDir                = ""
   $debug_maxFiles                     = 0
 
   $containerDirectory                 = "${medialibrary::base_data_dir}/${street}.street"
