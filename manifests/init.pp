@@ -93,10 +93,10 @@ class medialibrary (
 
   case $::operatingsystem {
     centos, redhat: {
-      package { ['subversion','ImageMagick','ncftp','php','php-mysql']: ensure => installed, }
+      package { ['subversion','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
+      package { ['subversion','imagemagick','ncftp','php5','php5-mysql','sendmail']: ensure => installed, }
     }
     
     default: {
