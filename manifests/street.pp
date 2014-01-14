@@ -85,7 +85,7 @@ define medialibrary::street(
 
 
   if $offload_method == 'CUSTOM' {
-    $offload_command = "tar chPf - \"%local_dir%\" | ncftpput -c -f /etc/medialib/ftp.cfg %remote_dir%/%name%"
+    $offload_command = "tar chPf - \"%local_dir%\" | ncftpput -c -f /etc/medialibrary/ftp.cfg %remote_dir%/%name%"
   }
 
   $nb = $medialibrary::numBackupGroups -1
