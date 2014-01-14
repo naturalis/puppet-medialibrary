@@ -65,7 +65,7 @@ class medialibrary (
   $resizeWhen_imageSize               =  3000,
 
   $imagemagick_convertCommand         = 'convert \"%s\" \"%s\"',
-  $imagemagick_resizeCommand          = 'convert \"%s\" -resize 3000x3000^> -quality 80 \"%s\"',
+  $imagemagick_resizeCommand          = 'convert \"%s\" -quality 80 \"%s\"',
   $imagemagick_maxErrors              = 0,
 
   $imagemagick_command                = 'convert',
