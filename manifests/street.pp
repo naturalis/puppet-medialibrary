@@ -100,7 +100,7 @@ define medialibrary::street(
 #  }
 
   if !defined(Cron['offload']) {
-    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
+    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini \$i & ; done"
     cron { 'offload':
       ensure  => present,
       command => $offload_job,
