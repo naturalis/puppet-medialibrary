@@ -91,7 +91,7 @@ define medialibrary::street(
   $nb = $medialibrary::numBackupGroups -1
 
 #  if !defined(Augeas['cron_offload']) {
-#    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini $i & ; done"
+#    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini \$i & ; done"
 #    augeas{'cron_offload':
 #      context => '/etc/crontab',
 #      changes => $offload_job,
