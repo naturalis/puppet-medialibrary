@@ -1,6 +1,5 @@
 
 class medialibrary::mediaserver (
-
   $db_host                            ,
   $db_mediaserver_user                ,
   $db_mediaserver_password            ,
@@ -49,7 +48,8 @@ class medialibrary::mediaserver (
   $log_directory                      = '/var/www/mediaserver/log',
   ) {
 
-
+  include apache::mod::php
+  
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
@@ -80,7 +80,7 @@ class medialibrary::mediaserver (
   class { 'apache':
     default_mods => true,
   }
-  include apache::mod::php
+  
 
   apache::vhost { '*.80':
       docroot         => '/var/www/mediaserver',
