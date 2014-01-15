@@ -97,13 +97,13 @@ class medialibrary::mediaserver (
           $base_masters_dir,
           $base_www_dir,
           '/var/www']:
-    ensure => directory
+    ensure => directory,
   }
 
-  host { $::hostname:
-    name          => $::hostname,
+  host { "${hostname}":
+    name          => $hostname,
     ip            => '127.0.0.1',
-    host_aliases  => [ $::hostname ],
+    host_aliases  => [ $hostname ],
   }
 
 
