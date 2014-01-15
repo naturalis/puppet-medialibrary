@@ -83,7 +83,7 @@ class medialibrary::mediaserver (
   $svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaServer/trunk',
   $svn_revision                       = 'latest',
 
-  $log_directory                      = '/tmp'
+  $log_directory                      = '/var/www/mediaserver/log'
   ) {
 
   #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
@@ -149,8 +149,18 @@ class medialibrary::mediaserver (
 
   }
 
+  file {"/var/www/mediaserver/static.ini":
+    ensure  => present,
+    content => template("medialibrary/static.ini.erb"),
+    require => Vcsrepo['/var/www/mediaserver'],
+  }
   
-
+  file {"${log_directory}":
+    ensure  => directory,
+    mode    => '666',
+    require => Vcsrepo['/var/www/mediaserver'],
+  }
+  
 
   #create_resources('medialibrary::street', hiera('medialibrary::street', []))
 
