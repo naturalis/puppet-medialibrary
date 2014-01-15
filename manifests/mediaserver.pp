@@ -112,7 +112,7 @@ class medialibrary::mediaserver (
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host[$::hostname],File['/var/www'] ],
+      require  => [Package['subversion'],Host[$::hostname],File['/var/www']],
     }
   }else{
       vcsrepo { '/var/www/mediaserver':
@@ -120,7 +120,7 @@ class medialibrary::mediaserver (
       provider => svn,
       revision => $svn_revision,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host[$::hostname],File['/var/www'] ],
+      require  => [Package['subversion'],Host[$::hostname],File['/var/www']],
     }
   }
 
