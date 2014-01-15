@@ -1,0 +1,20 @@
+; The shared logging directory for all digistraten. No name
+; conflicts will arise, because the name of the digistraat
+; is part of the file name
+logging.directory = "<%= @log_directory %>"
+; Will be ignored in media server component (Logging to
+; standard out ("echo") is prohibited when streaming media
+; files
+logging.stdout = "false"
+logging.level = "DEBUG"
+
+
+; Connection to media DB
+db0.host = "<%= @db_host %>"
+db0.user = "<%= @db_mediaserver_user %>"
+db0.password = "<%= @db_mediaserver_password %>"
+db0.dbname = "<%= @db_dbname %>"
+
+baseUrl = "/"
+
+debug = "false"
