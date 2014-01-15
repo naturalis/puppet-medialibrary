@@ -1,53 +1,16 @@
-# == Class: medialibrary
-#
-# Full description of class medialibrary here.
-#
-# === Parameters
-#
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { medialibrary:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2013 Your name here, unless otherwise noted.
-#
-class medialibrary::mediaserver (
 
-  $base_data_dir                      = '/data',
-  $base_www_dir                       = '/data/www',
-  $base_masters_dir                   = '/data/masters',
+class medialibrary::mediaserver (
 
   $db_host                            ,
   $db_mediaserver_user                ,
   $db_mediaserver_password            ,
   $db_dbname                          ,
 
-  $numBackupGroups                    = 1,
+  $base_data_dir                      = '/data',
+  $base_www_dir                       = '/data/www',
+  $base_masters_dir                   = '/data/masters',
 
+  $numBackupGroups                    = 1,
 
   $offload_immediate                  = 'dummy',
   $offload_method                     = 'dummy',
@@ -83,17 +46,29 @@ class medialibrary::mediaserver (
   $svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaServer/trunk',
   $svn_revision                       = 'latest',
 
-  $log_directory                      = '/var/www/mediaserver/log'
+  $log_directory                      = '/var/www/mediaserver/log',
   ) {
 
-  #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
 
   case $::operatingsystem {
     centos, redhat: {
-      package { ['subversion','ImageMagick','php','php-mysql','php-gd','sendmail']: ensure => installed, }
+      package {['subversion',
+                'ImageMagick',
+                'php',
+                'php-mysql',
+                'php-gd',
+                'sendmail']:
+        ensure => installed,
+      }
     }
     debian, ubuntu: {
-      package { ['subversion','imagemagick','php5','php5-mysql','sendmail']: ensure => installed, }
+      package {['subversion',
+                'imagemagick',
+                'php5',
+                'php5-mysql',
+                'sendmail']:
+        ensure => installed,
+      }
     }
 
     default: {
@@ -107,23 +82,28 @@ class medialibrary::mediaserver (
   }
   include apache::mod::php
 
-  apache::vhost { "*.80":
-      docroot => '/var/www/mediaserver',
-      require => Class['apache'],
-      access_log_file => "mediaserver_access.log",
-      error_log_file => "mediaserver_error.log",
-      directories => [ { path => '/var/www/mediaserver', allow_override => 'All' } ],
-      require => Vcsrepo['/var/www/mediaserver']
+  apache::vhost { '*.80':
+      docroot         => '/var/www/mediaserver',
+      require         => Class['apache'],
+      access_log_file => 'mediaserver_access.log',
+      error_log_file  => 'mediaserver_error.log',
+      directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
+      require         => Vcsrepo['/var/www/mediaserver']
   }
 
 
 
-  file { [ $base_data_dir, $base_masters_dir, $base_www_dir,'/var/www' ]:ensure => directory }
+  file { [$base_data_dir,
+          $base_masters_dir,
+          $base_www_dir,
+          '/var/www']:
+    ensure => directory
+  }
 
-  host { "${hostname}":
-    name          => $hostname,
+  host { $::hostname}:
+    name          => $::hostname,
     ip            => '127.0.0.1',
-    host_aliases  => [ $hostname ],
+    host_aliases  => [ $::hostname ],
   }
 
 
@@ -134,7 +114,7 @@ class medialibrary::mediaserver (
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}"] ,File['/var/www'] ],
+      require  => [ Package['subversion'],Host[$::hostname] ,File['/var/www'] ],
     }
 
   }else{
@@ -144,20 +124,20 @@ class medialibrary::mediaserver (
       provider => svn,
       revision => $svn_revision,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}"],File['/var/www'] ],
+      require  => [ Package['subversion'],Host[$::hostname],File['/var/www'] ],
     }
 
   }
 
-  file {"/var/www/mediaserver/static.ini":
+  file {'/var/www/mediaserver/static.ini':
     ensure  => present,
-    content => template("medialibrary/static.ini.erb"),
+    content => template('medialibrary/static.ini.erb'),
     require => Vcsrepo['/var/www/mediaserver'],
   }
 
-  file {"${log_directory}":
+  file {$log_directory:
     ensure  => directory,
-    mode    => '666',
+    mode    => '0666',
     require => Vcsrepo['/var/www/mediaserver'],
   }
 
