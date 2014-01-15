@@ -101,7 +101,6 @@ class medialibrary::mediaserver (
   }
 
   host { "${hostname}":
-    name          => $hostname,
     ip            => '127.0.0.1',
     host_aliases  => [ $hostname ],
   }
@@ -113,7 +112,7 @@ class medialibrary::mediaserver (
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
-      require  => [ Package['subversion'],Host[$::hostname] ,File['/var/www'] ],
+      require  => [ Package['subversion'],Host[$::hostname],File['/var/www'] ],
     }
   }else{
       vcsrepo { '/var/www/mediaserver':
@@ -127,6 +126,7 @@ class medialibrary::mediaserver (
 
   file {'/var/www/mediaserver/static.ini':
     ensure  => present,
+    mode    => '0666',
     content => template('medialibrary/static.ini.erb'),
     require => Vcsrepo['/var/www/mediaserver'],
   }
