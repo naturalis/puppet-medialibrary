@@ -95,7 +95,7 @@ class medialibrary::mediaserver (
     debian, ubuntu: {
       package { ['subversion','imagemagick','php5','php5-mysql','sendmail']: ensure => installed, }
     }
-    
+
     default: {
       fail('Unrecognized operating system')
     }
@@ -119,7 +119,7 @@ class medialibrary::mediaserver (
 
 
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir,'/var/www' ]:ensure => directory }
-  
+
   host { "${hostname}":
     name          => $hostname,
     ip            => '127.0.0.1',
@@ -154,13 +154,12 @@ class medialibrary::mediaserver (
     content => template("medialibrary/static.ini.erb"),
     require => Vcsrepo['/var/www/mediaserver'],
   }
-  
+
   file {"${log_directory}":
     ensure  => directory,
     mode    => '666',
     require => Vcsrepo['/var/www/mediaserver'],
   }
-  
 
   #create_resources('medialibrary::street', hiera('medialibrary::street', []))
 
