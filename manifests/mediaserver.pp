@@ -100,7 +100,7 @@ class medialibrary::mediaserver (
     ensure => directory
   }
 
-  host { $::hostname}:
+  host { $::hostname:
     name          => $::hostname,
     ip            => '127.0.0.1',
     host_aliases  => [ $::hostname ],
@@ -109,16 +109,13 @@ class medialibrary::mediaserver (
 
 
   if $svn_revision == 'latest' {
-
     vcsrepo { '/var/www/mediaserver':
       ensure   => latest,
       provider => svn,
       source   => $svn_loc,
       require  => [ Package['subversion'],Host[$::hostname] ,File['/var/www'] ],
     }
-
   }else{
-
       vcsrepo { '/var/www/mediaserver':
       ensure   => present,
       provider => svn,
@@ -126,7 +123,6 @@ class medialibrary::mediaserver (
       source   => $svn_loc,
       require  => [ Package['subversion'],Host[$::hostname],File['/var/www'] ],
     }
-
   }
 
   file {'/var/www/mediaserver/static.ini':
@@ -140,27 +136,5 @@ class medialibrary::mediaserver (
     mode    => '0666',
     require => Vcsrepo['/var/www/mediaserver'],
   }
-
-  #create_resources('medialibrary::street', hiera('medialibrary::street', []))
-
-#  if $share_streets {
-#
-#    class {'samba::server':
-#      workgroup     => 'NNM',
-#      server_string => "ml-test",
-#      interfaces    => "eth0 lo",
-#      security      => 'ads',
-#      require       => Host["${hostname}"],
-#    }
-#
-#    class { 'samba::server::ads':
-#      winbind_acct    => '',
-#      winbind_pass    => '',
-#      realm           => '',
-#      nsswitch        => true,
-#      target_ou       => "Computers",
-#      require         => Class['samba::server']
-#    }
-#  }
 
 }
