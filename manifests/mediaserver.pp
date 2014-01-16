@@ -81,7 +81,6 @@ class medialibrary::mediaserver (
   }
 
   class{ 'apache::mod::php': 
-    require => Class['apache'],
   }
 
   apache::vhost { '*.80':
