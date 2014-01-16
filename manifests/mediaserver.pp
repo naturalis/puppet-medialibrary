@@ -58,7 +58,7 @@ class medialibrary::mediaserver (
 
   nfs::server::export{ $base_www_dir :
       ensure  => 'mounted',
-      clients => '10.0.0.0/24(rw,insecure,async,no_root_squash) localhost(rw)',
+      clients => '10.21.1.18 (rw,insecure,async,no_root_squash)',
       nfstag  => 'mediaserver_www_directory',
       require => File[$base_www_dir],
   }
