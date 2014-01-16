@@ -49,6 +49,7 @@ class medialibrary::mediaserver (
   ) {
 
   include apache::mod::php
+  include apache::mod::prefork
 
   case $::operatingsystem {
     centos, redhat: {
