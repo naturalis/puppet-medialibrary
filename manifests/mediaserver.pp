@@ -50,6 +50,11 @@ class medialibrary::mediaserver (
 
   
   include concat::setup
+  
+  class { 'selinux':
+    mode => 'disabled',
+  }
+
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
