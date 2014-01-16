@@ -76,5 +76,15 @@ class medialibrary::oaipmh (
     require => Exec["/bin/sleep ${tomcat_service_timeout}"],
   }
 
+  include nfs::client
+  Nfs::Client::Mount <<|nfstag == 'mediaserver_www_directory' | >> {
+    ensure  => 'mounted',
+    mount   => '/import/media',
+    require => File['/import/media'],
+  }
+
+  file {'import/media':
+    ensure => directory,
+  }
   
 }
