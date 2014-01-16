@@ -48,8 +48,7 @@ class medialibrary::mediaserver (
   $log_directory                      = '/var/www/mediaserver/log',
   ) {
 
-  include apache::mod::php
-  include apache::mod::prefork
+  
 
   case $::operatingsystem {
     centos, redhat: {
@@ -83,13 +82,16 @@ class medialibrary::mediaserver (
     mpm_module    => 'prefork',
   }
 
+  class{ 'apache::mod::php': 
+    require => Class['apache'],
+  }
+
   apache::vhost { '*.80':
       docroot         => '/var/www/mediaserver',
       require         => Class['apache'],
       access_log_file => 'mediaserver_access.log',
       error_log_file  => 'mediaserver_error.log',
       directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
-      mpm_module      => 'prefork',
       require         => Vcsrepo['/var/www/mediaserver']
   }
 
