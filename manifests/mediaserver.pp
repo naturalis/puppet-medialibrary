@@ -80,7 +80,6 @@ class medialibrary::mediaserver (
   #class { 'apache':
   #  default_mods => true,
   #}
-  
 
   #apache::vhost { '*.80':
   #    docroot         => '/var/www/mediaserver',
