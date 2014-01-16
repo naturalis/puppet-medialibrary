@@ -14,14 +14,14 @@ class medialibrary::mediaserver (
   $offload_immediate                  = 'dummy',
   $offload_method                     = 'dummy',
   $offload_tar_maxSize                = 'dummy',
-  $offload_tar_maxFiles               = 'dummy,
+  $offload_tar_maxFiles               = 'dummy',
   $offload_ftp_host                   = 'dummy',
-  $offload_ftp_user                   = 'dummy'
-  $offload_ftp_password               = 'dummy'
+  $offload_ftp_user                   = 'dummy',
+  $offload_ftp_password               = 'dummy',
   $offload_ftp_passive                = 'dummy',
   $offload_ftp_reconnectPerFile       = 'dummy',
   $offload_ftp_maxConnectionAttempts  = 'dummy',
-  $offload_ftp_maxUploadAttempts      = 'dummy,
+  $offload_ftp_maxUploadAttempts      = 'dummy',
 
   $resizeWhen_fileType                = 'tiff,jpg,tif,jpeg,gif,png',
   $resizeWhen_imageSize               =  3000,
