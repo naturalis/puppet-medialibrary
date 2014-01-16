@@ -54,7 +54,6 @@ class medialibrary::mediaserver (
     centos, redhat: {
       package {['subversion',
                 'ImageMagick',
-                'php',
                 'php-mysql',
                 'php-gd',
                 'sendmail']:
@@ -64,7 +63,6 @@ class medialibrary::mediaserver (
     debian, ubuntu: {
       package {['subversion',
                 'imagemagick',
-                'php5',
                 'php5-mysql',
                 'sendmail']:
         ensure => installed,
