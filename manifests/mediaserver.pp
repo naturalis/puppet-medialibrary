@@ -49,7 +49,7 @@ class medialibrary::mediaserver (
   ) {
 
   
-
+  include concat::setup
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
