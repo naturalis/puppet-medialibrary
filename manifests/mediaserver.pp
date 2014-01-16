@@ -83,7 +83,8 @@ class medialibrary::mediaserver (
   class{ 'apache::mod::php': 
   }
 
-  apache::vhost { '*.80':
+  apache::vhost { 'medialib_test_2.nnm.local':
+      port            => '80',
       docroot         => '/var/www/mediaserver',
       servername      => 'medialib_test_2.nnm.local',
       access_log_file => 'mediaserver_access.log',
@@ -103,7 +104,7 @@ class medialibrary::mediaserver (
 
   host { $::hostname :
     ip            => '127.0.0.1',
-    host_aliases  => [ $::hostname ],
+    host_aliases  => [ $::hostname, $::fqdn ],
   }
 
 

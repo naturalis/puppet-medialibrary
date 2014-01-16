@@ -111,7 +111,7 @@ class medialibrary (
   host { "${hostname}":
     name          => $hostname,
     ip            => '127.0.0.1',
-    host_aliases  => [ $hostname ],
+    host_aliases  => [ $hostname,$fqdn ],
   }
 
 
