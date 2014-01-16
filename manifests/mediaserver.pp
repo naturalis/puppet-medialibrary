@@ -86,6 +86,7 @@ class medialibrary::mediaserver (
 
   apache::vhost { '*.80':
       docroot         => '/var/www/mediaserver',
+      servername      => 'medialib_test_2.nnm.local'
       access_log_file => 'mediaserver_access.log',
       error_log_file  => 'mediaserver_error.log',
       directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
