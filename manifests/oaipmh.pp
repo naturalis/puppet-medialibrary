@@ -83,8 +83,5 @@ class medialibrary::oaipmh (
     require => File['/import/media'],
   }
 
-  file {'/import/media':
-    ensure => directory,
-  }
-  
+    
 }
