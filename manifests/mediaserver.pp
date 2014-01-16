@@ -88,6 +88,7 @@ class medialibrary::mediaserver (
       access_log_file => 'mediaserver_access.log',
       error_log_file  => 'mediaserver_error.log',
       directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
+      mpm_module      => 'prefork',
       require         => Vcsrepo['/var/www/mediaserver']
   }
 
