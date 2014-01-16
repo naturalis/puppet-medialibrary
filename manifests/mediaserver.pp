@@ -78,7 +78,8 @@ class medialibrary::mediaserver (
 
 # Include apache modules with php
   class { 'apache':
-    default_mods => true,
+    default_mods  => true,
+    mpm_module    => 'prefork',
   }
 
   apache::vhost { '*.80':
