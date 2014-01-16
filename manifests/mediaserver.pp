@@ -50,7 +50,6 @@ class medialibrary::mediaserver (
 
   
   include concat::setup
-  include mysql::php
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
