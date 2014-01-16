@@ -55,6 +55,13 @@ class medialibrary::mediaserver (
     mode => 'disabled',
   }
 
+  nfs::server::export{ $base_www_dir :
+      ensure  => 'mounted',
+      clients => '10.0.0.0/24(rw,insecure,async,no_root_squash) localhost(rw)',
+      nfstag  => 'mediaserver_www_directory'
+      require => File[$base_www_dir],
+  }
+
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
