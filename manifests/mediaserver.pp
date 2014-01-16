@@ -99,9 +99,9 @@ class medialibrary::mediaserver (
     ensure => directory,
   }
 
-  host { "${hostname}":
+  host { $::hostname :
     ip            => '127.0.0.1',
-    host_aliases  => [ $hostname ],
+    host_aliases  => [ $::hostname ],
   }
 
 
