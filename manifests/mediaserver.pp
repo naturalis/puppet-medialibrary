@@ -50,6 +50,7 @@ class medialibrary::mediaserver (
 
   
   include concat::setup
+  include mysql::php
   case $::operatingsystem {
     centos, redhat: {
       package {['subversion',
@@ -104,7 +105,7 @@ class medialibrary::mediaserver (
 
   host { $::hostname :
     ip            => '127.0.0.1',
-    host_aliases  => [ $::hostname, $::fqdn ],
+    host_aliases  => [ $::hostname ],
   }
 
 
