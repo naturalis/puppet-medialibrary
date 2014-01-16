@@ -50,6 +50,7 @@ class medialibrary::mediaserver (
 
   
   include concat::setup
+  include nfs::server
   
   class { 'selinux':
     mode => 'disabled',
