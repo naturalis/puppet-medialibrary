@@ -48,7 +48,7 @@ class medialibrary::mediaserver (
   $log_directory                      = '/var/www/mediaserver/log',
   ) {
 
-  #include apache::mod::php
+  include apache::mod::php
 
   case $::operatingsystem {
     centos, redhat: {
@@ -77,18 +77,18 @@ class medialibrary::mediaserver (
   }
 
 # Include apache modules with php
-  #class { 'apache':
-  #  default_mods => true,
-  #}
+  class { 'apache':
+    default_mods => true,
+  }
 
-  #apache::vhost { '*.80':
-  #    docroot         => '/var/www/mediaserver',
-  #    require         => Class['apache'],
-  #    access_log_file => 'mediaserver_access.log',
-  #    error_log_file  => 'mediaserver_error.log',
-  #    directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
-  #    require         => Vcsrepo['/var/www/mediaserver']
-  #}
+  apache::vhost { '*.80':
+      docroot         => '/var/www/mediaserver',
+      require         => Class['apache'],
+      access_log_file => 'mediaserver_access.log',
+      error_log_file  => 'mediaserver_error.log',
+      directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
+      require         => Vcsrepo['/var/www/mediaserver']
+  }
 
 
 
