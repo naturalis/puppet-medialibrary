@@ -77,7 +77,7 @@ class medialibrary::oaipmh (
   }
 
   include nfs::client
-  Nfs::Client::Mount <<|nfstag == 'mediaserver_www_directory' | >> {
+  Nfs::Client::Mount <<| nfstag == 'mediaserver_www_directory' |>> {
     ensure  => 'mounted',
     mount   => '/import/media',
     require => File['/import/media'],
