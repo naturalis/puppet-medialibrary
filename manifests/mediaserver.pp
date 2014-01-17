@@ -5,42 +5,13 @@ class medialibrary::mediaserver (
   $db_mediaserver_password            ,
   $db_dbname                          ,
 
+  $media_harvester_ip                 ,
+
+  $media_server_url                   ,
+
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
-
-  $numBackupGroups                    = 1,
-
-  $offload_immediate                  = 'dummy',
-  $offload_method                     = 'dummy',
-  $offload_tar_maxSize                = 'dummy',
-  $offload_tar_maxFiles               = 'dummy',
-  $offload_ftp_host                   = 'dummy',
-  $offload_ftp_user                   = 'dummy',
-  $offload_ftp_password               = 'dummy',
-  $offload_ftp_passive                = 'dummy',
-  $offload_ftp_reconnectPerFile       = 'dummy',
-  $offload_ftp_maxConnectionAttempts  = 'dummy',
-  $offload_ftp_maxUploadAttempts      = 'dummy',
-
-  $resizeWhen_fileType                = 'tiff,jpg,tif,jpeg,gif,png',
-  $resizeWhen_imageSize               =  3000,
-
-  $imagemagick_convertCommand         = 'convert \"%s\" \"%s\"',
-  $imagemagick_resizeCommand          = 'convert \"%s\" -quality 80 \"%s\"',
-  $imagemagick_maxErrors              = 0,
-
-  $imagemagick_command                = 'convert',
-  $imagemagick_large_size             = 1920,
-  $imagemagick_large_quality          = 100,
-  $imagemagick_medium_size            = 500,
-  $imagemagick_medium_quality         = 100,
-  $imagemagick_small_size             = 100,
-  $imagemagick_small_quality          = 100,
-
-  $cleaner_minDaysOld                 = 4,
-  $cleaner_sweep                      = 'false',
-  $cleaner_unixRemove                 = 'true',
 
   $svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaServer/trunk',
   $svn_revision                       = 'latest',
@@ -57,7 +28,7 @@ class medialibrary::mediaserver (
   }
 
   nfs::server::export{ $base_www_dir :
-      clients => '10.21.1.16(rw,insecure,async,no_root_squash)',
+      clients => "${media_harvester_ip}(rw,insecure,async,no_root_squash)",
       nfstag  => 'mediaserver_www_directory',
       require => File[$base_www_dir],
   }
@@ -95,17 +66,13 @@ class medialibrary::mediaserver (
   class{ 'apache::mod::php': 
   }
 
-  apache::vhost { 'medialib_test_2.nnm.local':
+  apache::vhost { $media_server_url:
       port            => '80',
       docroot         => '/var/www/mediaserver',
-      servername      => 'medialib_test_2.nnm.local',
-      access_log_file => 'mediaserver_access.log',
-      error_log_file  => 'mediaserver_error.log',
+      servername      => $media_server_url,
       directories     => [{ path => '/var/www/mediaserver',allow_override => 'All' } ],
       require         => Vcsrepo['/var/www/mediaserver'],
   }
-
-
 
   file { [$base_data_dir,
           $base_masters_dir,
@@ -116,7 +83,7 @@ class medialibrary::mediaserver (
 
   host { $::hostname :
     ip            => '127.0.0.1',
-    host_aliases  => [ $::hostname ],
+    host_aliases  => [ $::hostname,$media_server_url ],
   }
 
 

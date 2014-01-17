@@ -4,10 +4,10 @@ class medialibrary::oaipmh (
 	$ml_db_user,
 	$ml_db_pwd,
 	$media_server_url,
-	$logfile_location	       = '/tmp/oaipmh.log',
-	$tomcat_service_timeout  = '10',
-	$tomcat_link             = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
-	$java_link               = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
+	$logfile_location	             = '/var/log/oai-pmh.log',
+	$tomcat_service_start_timeout  = '10',
+	$tomcat_link                   = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
+	$java_link                     = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
 
 ) {
 
@@ -53,7 +53,7 @@ class medialibrary::oaipmh (
 
   # wait some seconds before writing configs. 
   # this is because tomcat needs to unpack the war
-  exec {"/bin/sleep ${tomcat_service_timeout}":
+  exec {"/bin/sleep ${tomcat_service_start_timeout}":
     require => Exec['/bin/bash /etc/init.d/tomcat start'],
     unless  => '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
   }
@@ -66,21 +66,21 @@ class medialibrary::oaipmh (
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
     content	=> template('medialibrary/config.properties.erb'),
-    mode    => '660',
-    require => Exec["/bin/sleep ${tomcat_service_timeout}"],
+    mode    => '0660',
+    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
     mode    => '660',
-    require => Exec["/bin/sleep ${tomcat_service_timeout}"],
+    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
-  include nfs::client
-  Nfs::Client::Mount <<| nfstag == 'mediaserver_www_directory' |>> {
-    ensure  => 'mounted',
-    mount   => '/import/media',
-  }
+  #include nfs::client
+  #Nfs::Client::Mount <<| nfstag == 'mediaserver_www_directory' |>> {
+  #  ensure  => 'mounted',
+  #  mount   => '/import/media',
+  #}
 
     
 }

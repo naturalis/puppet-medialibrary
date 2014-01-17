@@ -1,57 +1,59 @@
 define medialibrary::street(
-  $street                 = $title,
   $producer               ,
+  $mail_to                ,
+  $cron_hour              ,
+  $cron_minute            ,
+  $street                 = $title,
   $owner                  = 'undefined',
   $fileTypes              = 'jpg,jpeg,tiff,tif,png',
   $log_stdout             = 'true',
   $log_level              = 'INFO',
-  $mail_to                ,
   $mail_onsuccess         = 'true'
 
 ) {
 
   # variables from main (and more general)
 
-  $base_data_dir                      = $medialibrary::base_data_dir
-  $masterDirectory                    = $medialibrary::base_masters_dir
-  $wwwDirectory                       = $medialibrary::base_www_dir
+  $base_data_dir                      = $medialibrary::harvester::base_data_dir
+  $masterDirectory                    = $medialibrary::harvester::base_masters_dir
+  $wwwDirectory                       = $medialibrary::harvester::base_www_dir
 
-  $db_host                            = $medialibrary::db_host
-  $db_user                            = $medialibrary::db_user
-  $db_password                        = $medialibrary::db_password
-  $db_dbname                          = $medialibrary::db_dbname
+  $db_host                            = $medialibrary::harvester::db_host
+  $db_user                            = $medialibrary::harvester::db_user
+  $db_password                        = $medialibrary::harvester::db_password
+  $db_dbname                          = $medialibrary::harvester::db_dbname
 
-  $numBackupGroups                    = $medialibrary::numBackupGroups
-  $offload_immediate                  = $medialibrary::offload_immediate
-  $offload_method                     = $medialibrary::offload_method
-  $offload_tar_maxSize                = $medialibrary::offload_tar_maxSize
-  $offload_tar_maxFiles               = $medialibrary::offload_tar_maxFiles
-  $offload_ftp_host                   = $medialibrary::offload_ftp_host
-  $offload_ftp_user                   = $medialibrary::offload_ftp_user
-  $offload_ftp_password               = $medialibrary::offload_ftp_password
-  $offload_ftp_passive                = $medialibrary::offload_ftp_passive
-  $offload_ftp_reconnectPerFile       = $medialibrary::offload_ftp_reconnectPerFile
-  $offload_ftp_maxConnectionAttempts  = $medialibrary::offload_ftp_maxConnectionAttempts
-  $offload_ftp_maxUploadAttempts      = $medialibrary::offload_ftp_maxUploadAttempts
+  $numBackupGroups                    = $medialibrary::harvester::numBackupGroups
+  $offload_immediate                  = $medialibrary::harvester::offload_immediate
+  $offload_method                     = $medialibrary::harvester::offload_method
+  $offload_tar_maxSize                = $medialibrary::harvester::offload_tar_maxSize
+  $offload_tar_maxFiles               = $medialibrary::harvester::offload_tar_maxFiles
+  $offload_ftp_host                   = $medialibrary::harvester::offload_ftp_host
+  $offload_ftp_user                   = $medialibrary::harvester::offload_ftp_user
+  $offload_ftp_password               = $medialibrary::harvester::offload_ftp_password
+  $offload_ftp_passive                = $medialibrary::harvester::offload_ftp_passive
+  $offload_ftp_reconnectPerFile       = $medialibrary::harvester::offload_ftp_reconnectPerFile
+  $offload_ftp_maxConnectionAttempts  = $medialibrary::harvester::offload_ftp_maxConnectionAttempts
+  $offload_ftp_maxUploadAttempts      = $medialibrary::harvester::offload_ftp_maxUploadAttempts
 
-  $resizeWhen_fileType                = $medialibrary::resizeWhen_fileType
-  $resizeWhen_imageSize               = $medialibrary::resizeWhen_imageSize
+  $resizeWhen_fileType                = $medialibrary::harvester::resizeWhen_fileType
+  $resizeWhen_imageSize               = $medialibrary::harvester::resizeWhen_imageSize
 
-  $imagemagick_convertCommand         = $medialibrary::imagemagick_convertCommand
-  $imagemagick_resizeCommand          = $medialibrary::imagemagick_resizeCommand
-  $imagemagick_maxErrors              = $medialibrary::imagemagick_maxErrors
+  $imagemagick_convertCommand         = $medialibrary::harvester::imagemagick_convertCommand
+  $imagemagick_resizeCommand          = $medialibrary::harvester::imagemagick_resizeCommand
+  $imagemagick_maxErrors              = $medialibrary::harvester::imagemagick_maxErrors
 
-  $imagemagick_command                = $medialibrary::imagemagick_command
-  $imagemagick_large_size             = $medialibrary::imagemagick_large_size
-  $imagemagick_large_quality          = $medialibrary::imagemagick_large_quality
-  $imagemagick_medium_size            = $medialibrary::imagemagick_medium_size
-  $imagemagick_medium_quality         = $medialibrary::imagemagick_medium_quality
-  $imagemagick_small_size             = $medialibrary::imagemagick_small_size
-  $imagemagick_small_quality          = $medialibrary::imagemagick_small_quality
+  $imagemagick_command                = $medialibrary::harvester::imagemagick_command
+  $imagemagick_large_size             = $medialibrary::harvester::imagemagick_large_size
+  $imagemagick_large_quality          = $medialibrary::harvester::imagemagick_large_quality
+  $imagemagick_medium_size            = $medialibrary::harvester::imagemagick_medium_size
+  $imagemagick_medium_quality         = $medialibrary::harvester::imagemagick_medium_quality
+  $imagemagick_small_size             = $medialibrary::harvester::imagemagick_small_size
+  $imagemagick_small_quality          = $medialibrary::harvester::imagemagick_small_quality
 
-  $cleaner_minDaysOld                 = $medialibrary::cleaner_minDaysOld
-  $cleaner_sweep                      = $medialibrary::cleaner_sweep
-  $cleaner_unixRemove                 = $medialibrary::cleaner_unixRemove
+  $cleaner_minDaysOld                 = $medialibrary::harvester::cleaner_minDaysOld
+  $cleaner_sweep                      = $medialibrary::harvester::cleaner_sweep
+  $cleaner_unixRemove                 = $medialibrary::harvester::cleaner_unixRemove
 
 
 
@@ -60,8 +62,8 @@ define medialibrary::street(
   $offload_ftp_initDir                = ""
   $debug_maxFiles                     = 0
 
-  $containerDirectory                 = "${medialibrary::base_data_dir}/${street}.street"
-  $publicDirectory                    = "${medialibrary::base_data_dir}/${street}.street/${street}"
+  $containerDirectory                 = "${medialibrary::harvester::base_data_dir}/${street}.street"
+  $publicDirectory                    = "${medialibrary::harvester::base_data_dir}/${street}.street/${street}"
   $harvestDirectory                   = "${publicDirectory}/harvest"
   $duplicatesDirecotry                = "${publicDirectory}/duplicates"
   $resubmitDirectory                  = "${publicDirectory}/resubmit"
@@ -80,7 +82,7 @@ define medialibrary::street(
           $logDirectory,
           $deadImagesDirectory ]:
     ensure => directory,
-    require => File[$medialibrary::base_data_dir],
+    require => File[$medialibrary::harvester::base_data_dir],
   }
 
 
@@ -88,7 +90,7 @@ define medialibrary::street(
     $offload_command = "tar chPf - \"%local_dir%\" | ncftpput -c -f /etc/medialibrary/ftp.cfg %remote_dir%/%name%"
   }
 
-  $nb = $medialibrary::numBackupGroups -1
+  $nb = $medialibrary::harvester::numBackupGroups -1
 
 #  if !defined(Augeas['cron_offload']) {
 #    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini \$i & ; done"
@@ -99,6 +101,12 @@ define medialibrary::street(
 
 #  }
 
+  file {"/etc/medialibrary/config-${street}.ini":
+    ensure  => present,
+    content => template("medialibrary/config.ini.erb"),
+    require => File['/etc/medialibrary'],
+  }
+
   if !defined(Cron['offload']) {
     $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini \$i & ; done"
     cron { 'offload':
@@ -106,45 +114,39 @@ define medialibrary::street(
       command => $offload_job,
       user    => root,
       hour    => "*",
-      minute  => "*/10",
+      minute  => "0",
     }
-  }
-
-  file {"/etc/medialibrary/config-${street}.ini":
-    ensure  => present,
-    content => template("medialibrary/config.ini.erb"),
-    require => File['/etc/medialibrary'],
   }
 
   cron { "cron-${street}-harvest":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/harvest.php /etc/medialibrary/config-${street}.ini",
       user    => root,
-      hour    => "*",
-      minute  => "*/10",
+      hour    => $cron_hour,
+      minute  => $cron_minute,
   }
   
-  cron { "cron-${street}-master":
+  cron { "cron-${street}-master-www":
       ensure  => present,
-      command => "/usr/bin/php /opt/medialibrary/publish-masters.php /etc/medialibrary/config-${street}.ini",
+      command => "/usr/bin/php /opt/medialibrary/publish-masters.php /etc/medialibrary/config-${street}.ini && /usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
       user    => root,
-      hour    => "*",
-      minute  => "*/10",
+      hour    => $cron_hour+1,
+      minute  => $cron_minute+1,
   }
   
-  cron { "cron-${street}-www":
-      ensure  => present,
-      command => "/usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
-      user    => root,
-      hour    => "*",
-      minute  => "*/10",
-  }
+  #cron { "cron-${street}-www":
+  #    ensure  => present,
+  #    command => "/usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
+  #    user    => root,
+  #    hour    => "*",
+  #    minute  => "*/10",
+  #}
   
   cron { "cron-${street}-cleanup":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/cleanup.php /etc/medialibrary/config-${street}.ini",
       user    => root,
-      hour    => "*",
+      hour    => "6",
       minute  => "0",
   }
     
