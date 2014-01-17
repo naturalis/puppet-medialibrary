@@ -47,7 +47,8 @@ class medialibrary::harvester (
   $db_dbname                          ,
 
   $numBackupGroups                    = 1,
- 
+  
+  $streets                            = hiera_based,
 
   $offload_immediate                  = 'true',
   $offload_method                     = 'CUSTOM',
@@ -143,8 +144,13 @@ class medialibrary::harvester (
     content => template("medialibrary/ftp.cfg.erb")
   }
 
+  if $streets == 'hiera_based' {
+    create_resources('medialibrary::street', hiera('medialibrary::street', []))
+  }else{
+    create_resources('medialibrary::street', $streets)
+  }
 
-  create_resources('medialibrary::street', hiera('medialibrary::street', []))
+  
 
 #  if $share_streets {
 #
