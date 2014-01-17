@@ -91,7 +91,8 @@ class medialibrary::harvester (
   ) {
 
   #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
-
+  include stdlib
+  
   case $::operatingsystem {
     centos, redhat: {
       package { ['subversion','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
