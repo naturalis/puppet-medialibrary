@@ -92,7 +92,7 @@ class medialibrary::harvester (
 
   #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
   include stdlib
-  
+
   case $::operatingsystem {
     centos, redhat: {
       package { ['subversion','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
@@ -148,7 +148,7 @@ class medialibrary::harvester (
   if $streets == 'hiera_based' {
     create_resources('medialibrary::street', hiera('medialibrary::street', []))
   }else{
-    create_resources('medialibrary::street', parseyaml($streets))
+    create_resources('medialibrary::street', $streets)
   }
 
   
