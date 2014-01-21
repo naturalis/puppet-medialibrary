@@ -94,6 +94,12 @@ class medialibrary::oaipmh (
     require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
+  exec {'clean_default_config':
+    command => '/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin +10 | grep oai-pmh.war',
+  }
+
   ini_setting { "ini_db_dsn":
       path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
@@ -101,7 +107,7 @@ class medialibrary::oaipmh (
       setting => 'db_dsn',
       value   => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   ini_setting { "ini_db_user":
@@ -111,7 +117,7 @@ class medialibrary::oaipmh (
       setting => 'db_user',
       value   => $ml_db_user,
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   ini_setting { "ini_db_pwd":
@@ -121,7 +127,7 @@ class medialibrary::oaipmh (
       setting => 'db_pwd',
       value   => $ml_db_pwd,
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   ini_setting { "ini_max_result_set_size":
@@ -131,7 +137,7 @@ class medialibrary::oaipmh (
       setting => 'max_result_set_size',
       value   => '50',
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   ini_setting { "ini_date_format_pattern":
@@ -141,7 +147,7 @@ class medialibrary::oaipmh (
       setting => 'date_format_pattern',
       value   => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   ini_setting { "ini_media_server_base_url":
@@ -151,7 +157,7 @@ class medialibrary::oaipmh (
       setting => 'media_server_base_url',
       value   => "http\://${media_server_url}",
       ensure  => present,
-      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+      require => Exec['clean_default_config'],
   }
 
   if $sets == 'hiera_based' {
