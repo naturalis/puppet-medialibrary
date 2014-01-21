@@ -155,7 +155,7 @@ class medialibrary::oaipmh (
   }
 
   if $sets == 'hiera_based' {
-    create_resources('medialibrary::oaipmh::set', hiera('medialibrary::oaipmh::set', []))
+    create_resources('medialibrary::oaipmh::set', hiera_hash('medialibrary::oaipmh::set', []))
   }else{
     create_resources('medialibrary::oaipmh::set', parseyaml($sets))
   }
