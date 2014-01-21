@@ -49,12 +49,11 @@ class medialibrary::oaipmh (
     require	=> Exec["extract-tomcat"],
     notify  => Service["tomcat"],
   }
-  
-  
+
   service { 'tomcat':
     enable    => true,
     ensure    => running,
-    require   => File['/etc/init.d/tomcat'],
+    require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Exec["extract-java"]]
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
   }
@@ -67,12 +66,6 @@ class medialibrary::oaipmh (
   }
 
   
-  #file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
-  #  content	=> template('medialibrary/config.properties.erb'),
-  #  mode    => '0660',
-  #  require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
-  #}
-
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
     mode    => '660',
