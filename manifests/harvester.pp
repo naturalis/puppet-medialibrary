@@ -146,7 +146,7 @@ class medialibrary::harvester (
   }
 
   if $streets == 'hiera_based' {
-    create_resources('medialibrary::street', hiera('medialibrary::street', []))
+    create_resources('medialibrary::street', hiera('medialibrary::street', {}))
   }else{
     create_resources('medialibrary::street', parseyaml($streets))
   }

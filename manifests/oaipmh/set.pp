@@ -12,7 +12,7 @@ define medialibrary::oaipmh::set(
     setting => "set.${set}.producers",
     value   => $producers,
     ensure  => present,
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    require => Exec["/bin/sleep ${oaipmh::tomcat_service_start_timeout}"],
   }
 
   ini_setting { "${set}-ini_max_result_set_size":
@@ -22,7 +22,7 @@ define medialibrary::oaipmh::set(
     setting => "set.${set}.max_result_set_size",
     value   => $max_result_set_size,
     ensure  => present,
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    require => Exec["/bin/sleep ${oaipmh::tomcat_service_start_timeout}"],
   }
 
   ini_setting { "${set}-ini_format":
@@ -32,7 +32,7 @@ define medialibrary::oaipmh::set(
     setting => "set.${set}.format",
     value   => $format,
     ensure  => present,
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    require => Exec["/bin/sleep ${oaipmh::tomcat_service_start_timeout}"],
   }
 
 }
