@@ -79,6 +79,7 @@ class medialibrary::oaipmh (
   ini_setting { "db_dsn":
       path    => '/tmp/foo.ini',
       section => '',
+      key_val_separator => '=',
       setting => 'db_dsn',
       value   => 'jdbc\:mysql\://nnms111.nnm.local/medialibrary_test',
       ensure  => present,
@@ -87,6 +88,7 @@ class medialibrary::oaipmh (
   ini_setting { "db_user":
       path    => '/tmp/foo.ini',
       section => '',
+      key_val_separator => '=',
       setting => 'db_user',
       value   => 'ml_oaipmh',
       ensure  => present,
@@ -94,7 +96,7 @@ class medialibrary::oaipmh (
 
   ini_setting { "db_pwd":
       path    => '/tmp/foo.ini',
-      section => '',
+      key_val_separator => '=',
       setting => 'db_pwd',
       value   => 'ml_password',
       ensure  => present,
