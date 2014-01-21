@@ -53,7 +53,7 @@ class medialibrary::oaipmh (
   service { 'tomcat':
     enable    => true,
     ensure    => running,
-    require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Exec["extract-java"]]
+    require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Exec["extract-java"]],
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
   }
