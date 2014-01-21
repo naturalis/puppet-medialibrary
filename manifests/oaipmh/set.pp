@@ -12,7 +12,7 @@ define medialibrary::oaipmh::set(
     setting => "set.${set}.producers",
     value   => $producers,
     ensure  => present,
-    require => Exec'clean_default_config'],
+    require => Exec['clean_default_config'],
   }
 
   ini_setting { "${set}-ini_max_result_set_size":

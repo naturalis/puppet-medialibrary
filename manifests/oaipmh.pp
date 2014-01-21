@@ -58,16 +58,7 @@ class medialibrary::oaipmh (
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
   }
-  #exec {"/bin/bash /etc/init.d/tomcat start":
-  #  require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
-  #  unless	=> '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep'
-  #}
-
-  #exec {"/bin/bash /etc/init.d/tomcat start":
-  #  require => [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
-  #  unless  => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep'
-  #}
-
+  
   # wait some seconds before writing configs. 
   # this is because tomcat needs to unpack the war
   exec {"/bin/sleep ${tomcat_service_start_timeout}":
@@ -76,13 +67,6 @@ class medialibrary::oaipmh (
   }
 
   
-  
-  #exec {"/sbin/chkconfig tomcat on":
-  #  require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
-  #  unless	=> '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
-  #}
-
-
   #file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
   #  content	=> template('medialibrary/config.properties.erb'),
   #  mode    => '0660',
