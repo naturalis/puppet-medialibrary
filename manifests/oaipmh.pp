@@ -55,6 +55,7 @@ class medialibrary::oaipmh (
     require   => File['/etc/init.d/tomcat'],
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
+    notify    => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
   #exec {"/bin/bash /etc/init.d/tomcat start":
   #  require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
@@ -68,9 +69,13 @@ class medialibrary::oaipmh (
 
   # wait some seconds before writing configs. 
   # this is because tomcat needs to unpack the war
+  #exec {"/bin/sleep ${tomcat_service_start_timeout}":
+  #  require => Service['tomcat'],
+  #  unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin -10 | grep oai-pmh.war',
+  #}
+
   exec {"/bin/sleep ${tomcat_service_start_timeout}":
     require => Service['tomcat'],
-    unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin -10 | grep oai-pmh.war',
   }
   
   #exec {"/sbin/chkconfig tomcat on":
