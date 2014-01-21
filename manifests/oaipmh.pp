@@ -12,6 +12,7 @@ class medialibrary::oaipmh (
 
 ) {
 
+  include stdlib
   exec {"download-java":
     command 	=> "/usr/bin/wget --no-cookies --no-check-certificate --header 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com' '${java_link}' -O /opt/jdk-7.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/jdk-7.tar.gz",
