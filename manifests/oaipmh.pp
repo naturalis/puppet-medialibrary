@@ -93,35 +93,66 @@ class medialibrary::oaipmh (
     require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
-  ini_setting { "db_dsn":
+  ini_setting { "ini_db_dsn":
       path    => '/tmp/foo.ini',
       section => '',
       key_val_separator => '=',
       setting => 'db_dsn',
-      value   => 'jdbc\:mysql\://nnms111.nnm.local/medialibrary_test',
+      value   => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
       ensure  => present,
       require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
-  ini_setting { "db_user":
+  ini_setting { "ini_db_user":
       path    => '/tmp/foo.ini',
       section => '',
       key_val_separator => '=',
       setting => 'db_user',
-      value   => 'ml_oaipmh',
+      value   => $ml_db_user,
       ensure  => present,
       require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
-  ini_setting { "db_pwd":
+  ini_setting { "ini_db_pwd":
       path    => '/tmp/foo.ini',
       section => '',
       key_val_separator => '=',
       setting => 'db_pwd',
-      value   => 'ml_password',
+      value   => $ml_db_pwd,
       ensure  => present,
       require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
+
+  ini_setting { "ini_max_result_set_size":
+      path    => '/tmp/foo.ini',
+      section => '',
+      key_val_separator => '=',
+      setting => 'max_result_set_size',
+      value   => '50',
+      ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+  }
+
+  ini_setting { "ini_date_format_pattern":
+      path    => '/tmp/foo.ini',
+      section => '',
+      key_val_separator => '=',
+      setting => 'date_format_pattern',
+      value   => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
+      ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+  }
+
+  ini_setting { "ini_media_server_base_url":
+      path    => '/tmp/foo.ini',
+      section => '',
+      key_val_separator => '=',
+      setting => 'media_server_base_url',
+      value   => "http\://${media_server_url}",
+      ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+  }
+
 
 
     
