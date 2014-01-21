@@ -8,6 +8,7 @@ class medialibrary::oaipmh (
 	$tomcat_service_start_timeout  = '10',
 	$tomcat_link                   = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
 	$java_link                     = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
+  $sets                          = 'hiera_based',
 
 ) {
 
@@ -153,6 +154,11 @@ class medialibrary::oaipmh (
       require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
+  if $sets == 'hiera_based' {
+    create_resources('medialibrary::oaipmh::set', hiera('medialibrary::oaipmh::set', []))
+  }else{
+    create_resources('medialibrary::oaipmh::set', parseyaml($sets))
+  }
 
 
     
