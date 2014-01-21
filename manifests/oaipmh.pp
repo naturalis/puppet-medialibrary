@@ -82,11 +82,11 @@ class medialibrary::oaipmh (
   #}
 
 
-  file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
-    content	=> template('medialibrary/config.properties.erb'),
-    mode    => '0660',
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
-  }
+  #file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
+  #  content	=> template('medialibrary/config.properties.erb'),
+  #  mode    => '0660',
+  #  require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+  #}
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
@@ -95,7 +95,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_dsn":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'db_dsn',
@@ -105,7 +105,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_user":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'db_user',
@@ -115,7 +115,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_pwd":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'db_pwd',
@@ -125,7 +125,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_max_result_set_size":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'max_result_set_size',
@@ -135,7 +135,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_date_format_pattern":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'date_format_pattern',
@@ -145,7 +145,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_media_server_base_url":
-      path    => '/tmp/foo.ini',
+      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
       setting => 'media_server_base_url',
