@@ -76,11 +76,30 @@ class medialibrary::oaipmh (
     require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
-  #include nfs::client
-  #Nfs::Client::Mount <<| nfstag == 'mediaserver_www_directory' |>> {
-  #  ensure  => 'mounted',
-  #  mount   => '/import/media',
-  #}
+  ini_setting { "db_dsn":
+      path    => '/tmp/foo.ini',
+      section => '',
+      setting => 'db_dsn',
+      value   => 'jdbc\:mysql\://nnms111.nnm.local/medialibrary_test',
+      ensure  => present,
+  }
+
+  ini_setting { "db_user":
+      path    => '/tmp/foo.ini',
+      section => '',
+      setting => 'db_user',
+      value   => 'ml_oaipmh',
+      ensure  => present,
+  }
+
+  ini_setting { "db_pwd":
+      path    => '/tmp/foo.ini',
+      section => '',
+      setting => 'db_pwd',
+      value   => 'ml_password',
+      ensure  => present,
+  }
+
 
     
 }
