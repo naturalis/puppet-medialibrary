@@ -38,30 +38,45 @@ class medialibrary::oaipmh (
   file {"/etc/init.d/tomcat":
     mode    => '755',
     content => template('medialibrary/tomcat.erb'),
+    require => Exec["extract-tomcat"],
   }
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war":
     source 	=> "puppet:///modules/medialibrary/oai-pmh.war",
     ensure 	=> "present",
     require	=> Exec["extract-tomcat"],
+    notify  => Service["tomcat"],
   }
   
-  exec {"/bin/bash /etc/init.d/tomcat start":
-    require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
-    unless	=> '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep'
+  
+  service { 'tomcat':
+    enable    => true,
+    ensure    => running,
+    require   => File['/etc/init.d/tomcat'],
+    hasstatus => 'false',
+    status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
   }
+  #exec {"/bin/bash /etc/init.d/tomcat start":
+  #  require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
+  #  unless	=> '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep'
+  #}
+
+  #exec {"/bin/bash /etc/init.d/tomcat start":
+  #  require => [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
+  #  unless  => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep'
+  #}
 
   # wait some seconds before writing configs. 
   # this is because tomcat needs to unpack the war
   exec {"/bin/sleep ${tomcat_service_start_timeout}":
     require => Exec['/bin/bash /etc/init.d/tomcat start'],
-    unless  => '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
+    unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin -10 | grep oai-pmh.war',
   }
   
-  exec {"/sbin/chkconfig tomcat on":
-    require	=> Exec["/bin/sleep ${tomcat_service_start_timeout}"],
-    unless	=> '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
-  }
+  #exec {"/sbin/chkconfig tomcat on":
+  #  require	=> [File['/etc/init.d/tomcat'],File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war']],
+  #  unless	=> '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
+  #}
 
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties":
@@ -83,6 +98,7 @@ class medialibrary::oaipmh (
       setting => 'db_dsn',
       value   => 'jdbc\:mysql\://nnms111.nnm.local/medialibrary_test',
       ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
   ini_setting { "db_user":
@@ -92,6 +108,7 @@ class medialibrary::oaipmh (
       setting => 'db_user',
       value   => 'ml_oaipmh',
       ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
   ini_setting { "db_pwd":
@@ -101,6 +118,7 @@ class medialibrary::oaipmh (
       setting => 'db_pwd',
       value   => 'ml_password',
       ensure  => present,
+      require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
   }
 
 
