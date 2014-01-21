@@ -59,7 +59,7 @@ class medialibrary::oaipmh (
   }
   
   exec {"/sbin/chkconfig tomcat on":
-    require	=> Exec["/bin/sleep ${tomcat_service_timeout}"],
+    require	=> Exec["/bin/sleep ${tomcat_service_start_timeout}"],
     unless	=> '/sbin/chkconfig | /bin/grep tomcat | /bin/grep on',
   }
 
