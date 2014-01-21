@@ -96,6 +96,7 @@ class medialibrary::oaipmh (
 
   ini_setting { "db_pwd":
       path    => '/tmp/foo.ini',
+      section => '',
       key_val_separator => '=',
       setting => 'db_pwd',
       value   => 'ml_password',
