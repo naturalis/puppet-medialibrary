@@ -78,8 +78,8 @@ class medialibrary::oaipmh (
   }
 
   exec {'clean_default_config':
-    command   => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-    subscribe => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    command     => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+    subscribe   => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
     refreshonly => true,
   }
 
