@@ -78,9 +78,9 @@ class medialibrary::oaipmh (
   }
 
   exec {'clean_default_config':
-    command => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
-    unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin +10 | grep oai-pmh.war',
+    command   => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+    subscribe => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    refreshonly => true,
   }
 
   ini_setting { "ini_db_dsn":
