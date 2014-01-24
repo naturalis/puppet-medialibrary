@@ -113,7 +113,7 @@ define medialibrary::street(
       ensure  => present,
       command => $offload_job,
       user    => root,
-      hour    => "*",
+      hour    => "1",
       minute  => "0",
     }
   }
