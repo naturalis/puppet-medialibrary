@@ -107,7 +107,7 @@ class medialibrary::oaipmh (
       path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
       section => '',
       key_val_separator => '=',
-      setting => 'db_pwd',
+      setting => 'db_password',
       value   => $ml_db_pwd,
       ensure  => present,
       require => Exec['clean_default_config'],
