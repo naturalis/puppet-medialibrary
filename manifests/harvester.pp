@@ -36,6 +36,7 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 class medialibrary::harvester (
+  $cluster_name                       ,
 
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',

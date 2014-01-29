@@ -1,4 +1,5 @@
 class medialibrary::mediaserver (
+  $cluster_name                       ,
   $db_host                            ,
   $db_mediaserver_user                ,
   $db_mediaserver_password            ,
