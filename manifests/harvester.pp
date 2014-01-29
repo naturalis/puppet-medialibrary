@@ -152,7 +152,7 @@ class medialibrary::harvester (
     create_resources('medialibrary::street', parseyaml($streets))
   }
   
-  Nfs::Client::Mount <<| nfstag == 'mediaserver_www_directory' |>> {
+  Nfs::Client::Mount <<| nfstag == "${cluster_name}_mediaserver_www_directory" |>> {
      ensure  => 'mounted',
      mount   => '/data/www',
   }

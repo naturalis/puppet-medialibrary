@@ -29,7 +29,7 @@ class medialibrary::mediaserver (
 
   nfs::server::export{ $base_www_dir :
       clients => "${media_harvester_ip}(rw,sync,no_root_squash)",
-      nfstag  => 'mediaserver_www_directory',
+      nfstag  => "${cluster_name}_mediaserver_www_directory",
       require => File[$base_www_dir],
   }
 
