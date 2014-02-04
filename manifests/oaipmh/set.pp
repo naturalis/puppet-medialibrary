@@ -1,8 +1,8 @@
 define medialibrary::oaipmh::set(
 	$producers,  
-	$set 					= $title,
-	$max_result_set_size	= '5',
-	$format					= 'medium',
+	$set 					         = $title,
+	$max_result_set_size   = '5',
+	$format					       = 'medium',
 ) {
   
   ini_setting { "${set}-ini_producers":
