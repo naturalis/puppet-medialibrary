@@ -43,6 +43,13 @@ class medialibrary::oaipmh (
     require => Exec["extract-tomcat"],
   }
 
+  augeas {'tomcat server.xml':
+    incl     =>  '/opt/apache-tomcat-7.0.50/conf/server.xml',
+    lens     => "Xml.lns",
+    changes   => [
+      "set Connector/[#port='8080'",]
+  }
+
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war":
     source 	=> "puppet:///modules/medialibrary/oai-pmh.war",
     ensure 	=> "present",
@@ -142,6 +149,8 @@ class medialibrary::oaipmh (
       ensure  => present,
       require => Exec['clean_default_config'],
   }
+
+
 
   if $sets == 'hiera_based' {
     create_resources('medialibrary::oaipmh::set', hiera_hash('medialibrary::oaipmh::set', {}))
