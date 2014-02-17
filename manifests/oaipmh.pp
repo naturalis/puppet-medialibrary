@@ -22,7 +22,7 @@ class medialibrary::oaipmh (
   include apache::mod::proxy_http
   include apache::mod::proxy_http
 
-  apache::vhost { 'webservices.naturalis.nl/medialib/oai-pmh':
+  apache::vhost { 'webservices.naturalis.nl':
     port                            => '80',
     proxy_pass                      => [{ 'path' => '/oai-pmh', 'url' => 'http://localhost:8080/oai-pmh/' },
                                         { 'path' => '/', 'url' => 'http://localhost:8080/oai-pmh/' }],
