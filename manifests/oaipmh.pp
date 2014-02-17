@@ -46,8 +46,9 @@ class medialibrary::oaipmh (
   augeas {'tomcat server.xml':
     incl     =>  '/opt/apache-tomcat-7.0.50/conf/server.xml',
     lens     => "Xml.lns",
-    changes   => [
-      "set Connector/[#port='8080'",]
+    changes  => [
+      "set Connector/[#port='8080']",],
+    require  => Exec["extract-tomcat"],
   }
 
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war":
