@@ -13,6 +13,24 @@ class medialibrary::oaipmh (
 ) {
 
   include stdlib
+  include concat::setup
+
+  class {'apache':
+    default_vhost => false,
+  }
+
+  include apache::mod::proxy_http
+  include apache::mod::proxy_http
+
+  apache::vhost { 'webservices.naturalis.nl/medialib/oai-pmh':
+    port                            => '80',
+    proxy_pass                      => 'http:://localhost::8080/oai-pmh/',
+    proxy_pass_preserve_host        => true,
+    #proxy_pass_reverse_cookie_path  => $proxy_pass_reverse_cookie_path,
+    priority                        => '1',
+    docroot                         => '/var/www',
+  }
+
   exec {"download-java":
     command 	=> "/usr/bin/wget --no-cookies --no-check-certificate --header 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com' '${java_link}' -O /opt/jdk-7.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/jdk-7.tar.gz",
@@ -43,14 +61,7 @@ class medialibrary::oaipmh (
     require => Exec["extract-tomcat"],
   }
 
-  augeas {'tomcat server.xml':
-    incl     =>  '/opt/apache-tomcat-7.0.50/conf/server.xml',
-    lens     => "Xml.lns",
-    changes  => [
-      "set Connector/[#port='8080']",],
-    require  => Exec["extract-tomcat"],
-  }
-
+  
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war":
     source 	=> "puppet:///modules/medialibrary/oai-pmh.war",
     ensure 	=> "present",
