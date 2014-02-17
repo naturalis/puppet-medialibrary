@@ -24,7 +24,8 @@ class medialibrary::oaipmh (
 
   apache::vhost { 'webservices.naturalis.nl/medialib/oai-pmh':
     port                            => '80',
-    proxy_pass                      => 'http:://localhost::8080/oai-pmh/',
+    proxy_pass                      => [{ 'path' => '/oai-pmh', 'url' => 'http://localhost:8080/oai-pmh/' },
+                                        { 'path' => '/', 'url' => 'http://localhost:8080/oai-pmh/' }],
     proxy_pass_preserve_host        => true,
     #proxy_pass_reverse_cookie_path  => $proxy_pass_reverse_cookie_path,
     priority                        => '1',
