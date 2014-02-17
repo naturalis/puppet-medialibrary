@@ -27,7 +27,7 @@ class medialibrary::oaipmh (
     proxy_pass                      => [{ 'path' => '/oai-pmh', 'url' => 'http://localhost:8080/oai-pmh/' },
                                         { 'path' => '/', 'url' => 'http://localhost:8080/oai-pmh/' }],
     proxy_pass_preserve_host        => true,
-    #proxy_pass_reverse_cookie_path  => $proxy_pass_reverse_cookie_path,
+    proxy_pass_reverse_cookie_path  =>  [{ 'path' => '/', 'url' => "/oai-pmh" }],
     priority                        => '1',
     docroot                         => '/var/www',
   }
