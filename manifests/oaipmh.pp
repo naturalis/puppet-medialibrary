@@ -4,31 +4,37 @@ class medialibrary::oaipmh (
 	$ml_db_user,
 	$ml_db_pwd,
 	$media_server_url,
-	$logfile_location	             = '/var/log/oai-pmh.log',
-	$tomcat_service_start_timeout  = '10',
-	$tomcat_link                   = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
-	$java_link                     = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
-  $sets                          = 'hiera_based',
+	$logfile_location                = '/var/log/oai-pmh.log',
+	$tomcat_service_start_timeout    = '10',
+	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
+	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
+  $sets                            = 'hiera_based',
+  $use_proxy                       = true,
+  $external_web_address            = 'webservices.naturalis.nl',
+  $external_web_address_path       = 'medialib'
 
 ) {
 
   include stdlib
-  include concat::setup
 
-  class {'apache':
-    default_vhost => false,
-  }
+  if $use_proxy {
+    include concat::setup
+    
+    class {'apache':
+      default_vhost => false,
+    }
 
-  include apache::mod::proxy_http
-  include apache::mod::proxy_http
+    include apache::mod::proxy_http
+    include apache::mod::proxy_http
 
-  apache::vhost { 'webservices.naturalis.nl':
-    port                            => '80',
-    proxy_pass                      => [{ 'path' => '/medialib', 'url' => 'http://localhost:8080/' }],
-    proxy_pass_preserve_host        => true,
-    proxy_pass_reverse_cookie_path  =>  [{ 'path' => '/', 'url' => "/oai-pmh" }],
-    priority                        => '1',
-    docroot                         => '/var/www',
+    apache::vhost { "$external_web_address":
+      port                            => '80',
+      proxy_pass                      => [{ 'path' => "/${external_web_address_path}", 'url' => 'http://localhost:8080/' }],
+      proxy_pass_preserve_host        => true,
+      proxy_pass_reverse_cookie_path  =>  [{ 'path' => '/', 'url' => "/oai-pmh" }],
+      priority                        => '1',
+      docroot                         => '/var/www',
+    }
   }
 
   exec {"download-java":
