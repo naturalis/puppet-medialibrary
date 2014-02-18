@@ -29,7 +29,7 @@ class medialibrary::oaipmh (
 
     apache::vhost { "$external_web_address":
       port                            => '80',
-      proxy_pass                      => [{ 'path' => "/${external_web_address_path}", 'url' => 'http://localhost:8080/' }],
+      proxy_pass                      => [{ 'path' => "/${external_web_address_path}", 'url' => 'http://localhost:8080' }],
       proxy_pass_preserve_host        => true,
       proxy_pass_reverse_cookie_path  => [{ 'path' => '/', 'url' => "/oai-pmh" }],
       priority                        => '1',
