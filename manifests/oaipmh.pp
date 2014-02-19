@@ -35,6 +35,13 @@ class medialibrary::oaipmh (
       priority                        => '1',
       docroot                         => '/var/www',
     }
+
+    augeas {"set url_rewrite":
+      context => '/files/etc/httpd/conf.d/1-webservices.naturalis.nl.conf',
+      changes => [
+        "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
+      ],
+    }
   }
 
   exec {"download-java":
