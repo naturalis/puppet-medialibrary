@@ -41,7 +41,7 @@ class medialibrary::oaipmh (
       changes => [
         "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
       ],
-      require => Apache::vhost["$external_web_address"],
+      require => File["1-${external_web_address}.conf"],
     }
   }
 
