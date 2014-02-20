@@ -35,7 +35,7 @@ class medialibrary::oaipmh (
       priority                        => '1',
       docroot                         => '/var/www',
     }
-    notice["etc/httpd/conf.d/1-${external_web_address}.conf"]
+    notice("etc/httpd/conf.d/1-${external_web_address}.conf")
     augeas {"set url_rewrite":
       context => "/files/etc/httpd/conf.d/1-${external_web_address}.conf",
       changes => [
