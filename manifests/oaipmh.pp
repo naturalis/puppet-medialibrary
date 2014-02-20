@@ -38,6 +38,7 @@ class medialibrary::oaipmh (
 
     notify{ "/etc/httpd/conf.d/1-${external_web_address}.conf" :}
     augeas {"set url_rewrite":
+      lens => 'Httpd.lns',
       incl => "/etc/httpd/conf.d/1-${external_web_address}.conf",
       changes => [
         "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
