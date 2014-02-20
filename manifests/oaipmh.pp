@@ -37,12 +37,17 @@ class medialibrary::oaipmh (
     }
 
     notify{ "/etc/httpd/conf.d/1-${external_web_address}.conf" :}
-    augeas {"set url_rewrite":
-      context => "/etc/httpd/conf.d/1-${external_web_address}.conf",
-      changes => [
-        "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
-      ],
-      require => File["1-${external_web_address}.conf"],
+    #augeas {"set url_rewrite":
+    #  context => "/etc/httpd/conf.d/1-${external_web_address}.conf",
+    #  changes => [
+    #    "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
+    #  ],
+    #  require => File["1-${external_web_address}.conf"],
+    #}
+
+    exec { 'modify ProxyHTMLURLMap':
+      command => "/bin/sed -i '/^ProxyPassReverse/a \
+  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf "
     }
   }
 
