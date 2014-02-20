@@ -46,8 +46,7 @@ class medialibrary::oaipmh (
     #}
 
     exec { 'modify ProxyHTMLURLMap':
-      command => "/bin/sed -i '/ProxyPreserveHost/a \     
-  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
+      command => "/bin/sed -i '/ProxyPreserveHost/a \\ ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
       require => File["1-${external_web_address}.conf"],
     }
   }
