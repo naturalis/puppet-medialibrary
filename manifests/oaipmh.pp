@@ -36,7 +36,6 @@ class medialibrary::oaipmh (
       docroot                         => '/var/www',
     }
 
-    notify{ "/etc/httpd/conf.d/1-${external_web_address}.conf" :}
     #augeas {"set url_rewrite":
     #  context => "/etc/httpd/conf.d/1-${external_web_address}.conf",
     #  changes => [
@@ -48,12 +47,14 @@ class medialibrary::oaipmh (
     exec { 'modify ProxyHTMLEnable':
       command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
       require => File["1-${external_web_address}.conf"],
+      unless  => "/bin/grep 'ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
     }
 
     exec { 'modify ProxyHTMLURLMap':
       command => "/bin/sed -i '/ProxyHTMLEnable/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
       require => Exec['modify ProxyHTMLEnable'],
       notify  => Service['httpd'],
+      unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
     }
   }
 
