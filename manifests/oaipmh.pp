@@ -16,6 +16,7 @@ class medialibrary::oaipmh (
 ) {
 
   include stdlib
+  notice("etc/httpd/conf.d/1-${external_web_address}.conf")
 
   if $use_proxy {
     include concat::setup
@@ -35,7 +36,6 @@ class medialibrary::oaipmh (
       priority                        => '1',
       docroot                         => '/var/www',
     }
-    notice("etc/httpd/conf.d/1-${external_web_address}.conf")
     augeas {"set url_rewrite":
       context => "/files/etc/httpd/conf.d/1-${external_web_address}.conf",
       changes => [
