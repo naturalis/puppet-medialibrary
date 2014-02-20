@@ -16,7 +16,7 @@ class medialibrary::oaipmh (
 ) {
 
   include stdlib
-  notice("etc/httpd/conf.d/1-${external_web_address}.conf")
+  notice("hoi")
 
   if $use_proxy {
     include concat::setup
