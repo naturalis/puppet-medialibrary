@@ -37,7 +37,8 @@ class medialibrary::oaipmh (
     }
 
     augeas {"set url_rewrite":
-      context => '/files/etc/httpd/conf.d/1-webservices.naturalis.nl.conf',
+      lens    => 'Httpd.lns',
+      context => "/files/etc/httpd/conf.d/1-${external_web_address}.conf",
       changes => [
         "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
       ],
