@@ -8,7 +8,8 @@ class medialibrary::oaipmh (
 	$tomcat_service_start_timeout    = '10',
 	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
 	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz',
-  $java_version                    = '7.51',
+  $java_version_major              = 7,
+  $java_version_minor              = 51,
   $sets                            = 'hiera_based',
   $use_proxy                       = true,
   $external_web_address            = 'webservices.naturalis.nl',
@@ -52,9 +53,9 @@ class medialibrary::oaipmh (
     }
   }
 
-  $jva = split($java_version, '.')
-  $jva_main = $jva[0]
-  $jva_min = $jva[1]
+  #$jva = split($java_version, '.')
+  $jva_main = $java_version_major
+  $jva_min = $java_version_minor
   $jva_dwn_version = "${jva_main}u${jva_min}"
   $jva_extract_version = "jdk1.${jva_main}.0_${jva_min}"
 
