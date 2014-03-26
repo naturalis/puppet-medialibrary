@@ -137,7 +137,6 @@ class medialibrary::oaipmh (
       value             => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_user":
@@ -148,7 +147,6 @@ class medialibrary::oaipmh (
       value             => $ml_db_user,
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_pwd":
@@ -159,7 +157,6 @@ class medialibrary::oaipmh (
       value             => $ml_db_pwd,
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_max_result_set_size":
@@ -170,7 +167,6 @@ class medialibrary::oaipmh (
       value             => '50',
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_date_format_pattern":
@@ -181,7 +177,6 @@ class medialibrary::oaipmh (
       value             => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_media_server_base_url":
@@ -192,7 +187,6 @@ class medialibrary::oaipmh (
       value             => "http\://${media_server_url}",
       ensure            => present,
       require           => Exec['clean_default_config'],
-      notify            => Service['tomcat'],
   }
 
 
