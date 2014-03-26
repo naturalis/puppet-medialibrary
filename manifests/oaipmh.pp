@@ -7,7 +7,8 @@ class medialibrary::oaipmh (
 	$logfile_location                = '/var/log/oai-pmh.log',
 	$tomcat_service_start_timeout    = '10',
 	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
-	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz',
+	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz',
+  $java_version                    = '7.51',
   $sets                            = 'hiera_based',
   $use_proxy                       = true,
   $external_web_address            = 'webservices.naturalis.nl',
@@ -36,14 +37,7 @@ class medialibrary::oaipmh (
       docroot                         => '/var/www',
     }
 
-    #augeas {"set url_rewrite":
-    #  context => "/etc/httpd/conf.d/1-${external_web_address}.conf",
-    #  changes => [
-    #    "set \"/VirtualHost/*/[self::directive=\'ProxyHTMLURLMap\']/arg\" \"/oai-pmh /medialib/oai-pmh\" "
-    #  ],
-    #  require => File["1-${external_web_address}.conf"],
-    #}
-
+   
     exec { 'modify ProxyHTMLEnable':
       command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
       require => File["1-${external_web_address}.conf"],
@@ -58,9 +52,16 @@ class medialibrary::oaipmh (
     }
   }
 
+  $jva = split($java_version, '.')
+  $jva_dwn_version = "${jva[0]}u${jva[1]}"
+  $jva_extract_version = "jdk1.${jva[0]}.0_${jva[1]}"
+
+  $java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
+  
+
   exec {"download-java":
-    command 	=> "/usr/bin/wget --no-cookies --no-check-certificate --header 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com' '${java_link}' -O /opt/jdk-7.tar.gz",
-    unless  	=> "/usr/bin/test -f /opt/jdk-7.tar.gz",
+    command 	=> "/usr/bin/wget --no-check-certificate --no-cookies - --header 'Cookie: oraclelicense=accept-securebackup-cookie' '${java_link_real}' -O /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
+    unless  	=> "/usr/bin/test -f /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
   }
   
   exec {"download-tomcat":
@@ -69,9 +70,9 @@ class medialibrary::oaipmh (
   }
 
   exec {"extract-java":
-    command   => "/bin/tar -xzf /opt/jdk-7.tar.gz",
+    command   => "/bin/tar -xzf /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
     cwd       => "/opt",
-    unless    => "/usr/bin/test -d /opt/jdk1.7.0",
+    unless    => "/usr/bin/test -d /opt/${jva_extract_version}",
     require   => Exec["download-java"],
   }
 
@@ -85,15 +86,32 @@ class medialibrary::oaipmh (
   file {"/etc/init.d/tomcat":
     mode    => '755',
     content => template('medialibrary/tomcat.erb'),
-    require => Exec["extract-tomcat"],
   }
 
-  
-  file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh.war":
+  file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh":
+    ensure  => directory,
+    require => Exec['extract-tomcat']
+  }
+
+  file {"/opt/oai-pmh.war":
     source 	=> "puppet:///modules/medialibrary/oai-pmh.war",
     ensure 	=> "present",
-    require	=> Exec["extract-tomcat"],
-    notify  => Service["tomcat"],
+  }
+
+  exec {"extract-war":
+    command   => "/opt/${jva_extract_version}/bin/jar xvf /opt/oai-pmh.jar",
+    cwd       => "/opt/apache-tomcat-7.0.50/webapps/oai-pmh",
+    unless    => "/usr/bin/test -f /opt/apache-tomcat-7.0.50/webapps/oai-pmh/index.jsp",
+    require   => [Exec['extract-tomcat'],
+                  Exec['extract-java'],
+                  File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh']
+                 ],
+    notify    => Exec['clean_default_config'],
+  }
+  
+  exec {'clean_default_config':
+    command     => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+    refreshonly => true,
   }
 
   service { 'tomcat':
@@ -111,23 +129,16 @@ class medialibrary::oaipmh (
   #  unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin +10 | grep oai-pmh.war',
   #}
 
-  exec {"/bin/sleep ${tomcat_service_start_timeout}":
-    refreshonly => true,
-    subscribe   => Service["tomcat"],
-  }
+ 
 
   
   file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
     mode    => '660',
-    require => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
+    require => Exec['extract-war'],
   }
 
-  exec {'clean_default_config':
-    command     => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-    subscribe   => Exec["/bin/sleep ${tomcat_service_start_timeout}"],
-    refreshonly => true,
-  }
+  
 
   ini_setting { "ini_db_dsn":
       path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
@@ -137,6 +148,7 @@ class medialibrary::oaipmh (
       value             => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_user":
@@ -147,6 +159,7 @@ class medialibrary::oaipmh (
       value             => $ml_db_user,
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_pwd":
@@ -157,6 +170,7 @@ class medialibrary::oaipmh (
       value             => $ml_db_pwd,
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_max_result_set_size":
@@ -167,6 +181,7 @@ class medialibrary::oaipmh (
       value             => '50',
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_date_format_pattern":
@@ -177,6 +192,7 @@ class medialibrary::oaipmh (
       value             => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_media_server_base_url":
@@ -187,6 +203,7 @@ class medialibrary::oaipmh (
       value             => "http\://${media_server_url}",
       ensure            => present,
       require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
 
