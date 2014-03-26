@@ -130,63 +130,69 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_dsn":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'db_dsn',
-      value   => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'db_dsn',
+      value             => "jdbc\:mysql\://${ml_db_url}/${ml_db_db}",
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_user":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'db_user',
-      value   => $ml_db_user,
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'db_user',
+      value             => $ml_db_user,
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_db_pwd":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'db_password',
-      value   => $ml_db_pwd,
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'db_password',
+      value             => $ml_db_pwd,
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_max_result_set_size":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'max_result_set_size',
-      value   => '50',
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'max_result_set_size',
+      value             => '50',
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_date_format_pattern":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'date_format_pattern',
-      value   => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'date_format_pattern',
+      value             => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
   ini_setting { "ini_media_server_base_url":
-      path    => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
-      section => '',
+      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      section           => '',
       key_val_separator => '=',
-      setting => 'media_server_base_url',
-      value   => "http\://${media_server_url}",
-      ensure  => present,
-      require => Exec['clean_default_config'],
+      setting           => 'media_server_base_url',
+      value             => "http\://${media_server_url}",
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
   }
 
 
