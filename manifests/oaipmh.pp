@@ -53,8 +53,10 @@ class medialibrary::oaipmh (
   }
 
   $jva = split($java_version, '.')
-  $jva_dwn_version = "${jva[0]}u${jva[1]}"
-  $jva_extract_version = "jdk1.${jva[0]}.0_${jva[1]}"
+  $jva_main = $jva[0]
+  $jva_min = $jva[1]
+  $jva_dwn_version = "${jva_main}u${jva_min}"
+  $jva_extract_version = "jdk1.${jva_main}.0_${jva_min}"
 
   $java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
   
