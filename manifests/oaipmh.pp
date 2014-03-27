@@ -144,6 +144,8 @@ class medialibrary::oaipmh (
     require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Exec["extract-java"]],
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
+    start     => '/etc/init.d/tomcat start',
+    stop      => '/etc/init.d/tomcat stop',
   }
   
   # wait some seconds before writing configs. 
