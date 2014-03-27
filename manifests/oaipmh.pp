@@ -9,6 +9,7 @@ class medialibrary::oaipmh (
 	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
 	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz',
   $java_version                    = '7.51',
+  $tomcat_version                  = '7.0.52',
   $sets                            = 'hiera_based',
   $use_proxy                       = true,
   $external_web_address            = 'webservices.naturalis.nl',
@@ -55,8 +56,11 @@ class medialibrary::oaipmh (
   $jva = split($java_version, '[.]')
   $jva_dwn_version = "${jva[0]}u${jva[1]}"
   $jva_extract_version = "jdk1.${jva[0]}.0_${jva[1]}"
+  $tv = split($tomcat_version,'[.]')
+  $tv_main = $tv[0]
 
   $java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
+  $tomcat_link_real = "http://ftp.nluug.nl/internet/apache/tomcat/tomcat-${tv_main}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.tar.gz"
   
 
   exec {"download-java":
@@ -65,8 +69,8 @@ class medialibrary::oaipmh (
   }
   
   exec {"download-tomcat":
-    command 	=> "/usr/bin/wget ${tomcat_link} -O /opt/apache-tomcat-7.0.50.tar.gz",
-    unless  	=> "/usr/bin/test -f /opt/apache-tomcat-7.0.50.tar.gz",
+    command 	=> "/usr/bin/wget ${tomcat_link_real} -O /opt/apache-tomcat-${tomcat_version}.tar.gz",
+    unless  	=> "/usr/bin/test -f /opt/apache-tomcat-${tomcat_version}.tar.gz",
   }
 
   exec {"extract-java":
@@ -77,9 +81,9 @@ class medialibrary::oaipmh (
   }
 
   exec {"extract-tomcat":
-    command   => "/bin/tar -xzf /opt/apache-tomcat-7.0.50.tar.gz",
+    command   => "/bin/tar -xzf /opt/apache-tomcat-${tomcat_version}.tar.gz",
     cwd       => "/opt",
-    unless    => "/usr/bin/test -d /opt/apache-tomcat-7.0.50",
+    unless    => "/usr/bin/test -d /opt/apache-tomcat-${tomcat_version}",
     require    => Exec["download-tomcat"],
   }
 
@@ -88,7 +92,7 @@ class medialibrary::oaipmh (
     content => template('medialibrary/tomcat.erb'),
   }
 
-  file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh":
+  file {"/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh":
     ensure  => directory,
     require => Exec['extract-tomcat']
   }
@@ -100,17 +104,17 @@ class medialibrary::oaipmh (
 
   exec {"extract-war":
     command   => "/opt/${jva_extract_version}/bin/jar xvf /opt/oai-pmh.jar",
-    cwd       => "/opt/apache-tomcat-7.0.50/webapps/oai-pmh",
-    unless    => "/usr/bin/test -f /opt/apache-tomcat-7.0.50/webapps/oai-pmh/index.jsp",
+    cwd       => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh",
+    unless    => "/usr/bin/test -f /opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/index.jsp",
     require   => [Exec['extract-tomcat'],
                   Exec['extract-java'],
-                  File['/opt/apache-tomcat-7.0.50/webapps/oai-pmh']
+                  File["/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh"]
                  ],
     notify    => Exec['clean_default_config'],
   }
   
   exec {'clean_default_config':
-    command     => '/bin/rm -fr /opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+    command     => "/bin/rm -fr /opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
     refreshonly => true,
   }
 
@@ -132,7 +136,7 @@ class medialibrary::oaipmh (
  
 
   
-  file {"/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/logback.xml":
+  file {"/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
     mode    => '660',
     require => Exec['extract-war'],
@@ -141,7 +145,7 @@ class medialibrary::oaipmh (
   
 
   ini_setting { "ini_db_dsn":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'db_dsn',
@@ -152,7 +156,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_user":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'db_user',
@@ -163,7 +167,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_db_pwd":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'db_password',
@@ -174,7 +178,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_max_result_set_size":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'max_result_set_size',
@@ -185,7 +189,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_date_format_pattern":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'date_format_pattern',
@@ -196,7 +200,7 @@ class medialibrary::oaipmh (
   }
 
   ini_setting { "ini_media_server_base_url":
-      path              => '/opt/apache-tomcat-7.0.50/webapps/oai-pmh/WEB-INF/classes/config.properties',
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
       setting           => 'media_server_base_url',
