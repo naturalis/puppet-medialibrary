@@ -104,7 +104,7 @@ class medialibrary::oaipmh (
   }
 
   exec {"extract-war":
-    command   => "/opt/${jva_extract_version}/bin/jar xvf /opt/oai-pmh.jar",
+    command   => "/opt/${jva_extract_version}/bin/jar xvf /opt/oai-pmh.war",
     cwd       => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh",
     unless    => "/usr/bin/test -f /opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/index.jsp",
     require   => [Exec['extract-tomcat'],
