@@ -56,7 +56,7 @@ class medialibrary::oaipmh (
     } elsif $::operatingsystem == 'Ubuntu' {
       
       exec { 'modify ProxyHTMLEnable':
-        command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/apache2/sites-available/1-${external_web_address}.conf",
+        command => "/bin/sed -i '/ProxyPreserveHost/a \  SetOutputFilter proxy-html' /etc/apache2/sites-available/1-${external_web_address}.conf",
         require => File["1-${external_web_address}.conf"],
         unless  => "/bin/grep 'ProxyHTMLEnable On' /etc/apache2/sites-available/1-${external_web_address}.conf",
       }
