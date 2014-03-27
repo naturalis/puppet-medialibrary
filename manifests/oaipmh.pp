@@ -66,6 +66,7 @@ class medialibrary::oaipmh (
   exec {"download-java":
     command 	=> "/usr/bin/wget --no-check-certificate --no-cookies - --header 'Cookie: oraclelicense=accept-securebackup-cookie' '${java_link_real}' -O /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
+    returns   => [0,4],
   }
   
   exec {"download-tomcat":
