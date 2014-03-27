@@ -38,19 +38,38 @@ class medialibrary::oaipmh (
       docroot                         => '/var/www',
     }
 
-   
-    exec { 'modify ProxyHTMLEnable':
-      command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
-      require => File["1-${external_web_address}.conf"],
-      unless  => "/bin/grep 'ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
-    }
+    if $::osfamily == 'RedHat' {
 
-    exec { 'modify ProxyHTMLURLMap':
-      command => "/bin/sed -i '/ProxyHTMLEnable/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
-      require => Exec['modify ProxyHTMLEnable'],
-      notify  => Service['httpd'],
-      unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
+      exec { 'modify ProxyHTMLEnable':
+        command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
+        require => File["1-${external_web_address}.conf"],
+        unless  => "/bin/grep 'ProxyHTMLEnable On' /etc/httpd/conf.d/1-${external_web_address}.conf",
+      }
+
+      exec { 'modify ProxyHTMLURLMap':
+        command => "/bin/sed -i '/ProxyHTMLEnable/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
+        require => Exec['modify ProxyHTMLEnable'],
+        notify  => Service['httpd'],
+        unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/httpd/conf.d/1-${external_web_address}.conf",
+      }
+
+    } elsif $::operatingsystem == 'Ubuntu' {
+      
+      exec { 'modify ProxyHTMLEnable':
+        command => "/bin/sed -i '/ProxyPreserveHost/a \  ProxyHTMLEnable On' /etc/apache2/sites-available/1-${external_web_address}.conf",
+        require => File["1-${external_web_address}.conf"],
+        unless  => "/bin/grep 'ProxyHTMLEnable On' /etc/apache2/sites-available/1-${external_web_address}.conf",
+      }
+
+      exec { 'modify ProxyHTMLURLMap':
+        command => "/bin/sed -i '/ProxyHTMLEnable/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
+        require => Exec['modify ProxyHTMLEnable'],
+        notify  => Service['httpd'],
+        unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
+      }        
     }
+   
+    
   }
 
   $jva = split($java_version, '[.]')
