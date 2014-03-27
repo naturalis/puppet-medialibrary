@@ -5,7 +5,7 @@ JAVA_HOME=/opt/<%= $jva_extract_version %>
 export JAVA_HOME  
 PATH=$JAVA_HOME/bin:$PATH  
 export PATH  
-CATALINA_HOME=/opt/apache-tomcat-<%= $tomcat_version %>  
+CATALINA_HOME=/opt/apache-tomcat-<%= $::medialibrary::oaipmh::tomcat_version %>  
       
 case $1 in  
 start)  
