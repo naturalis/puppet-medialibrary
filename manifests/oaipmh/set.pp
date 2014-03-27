@@ -5,8 +5,10 @@ define medialibrary::oaipmh::set(
 	$format					       = 'medium',
 ) {
   
+  $tomcat_version = $::medialibrary::oaipmh::tomcat_version
+
   ini_setting { "${set}-ini_producers":
-    path    => "/opt/apache-tomcat-${medialibrary::oai-pmh::tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
+    path    => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
     section => '',
     key_val_separator => '=',
     setting => "set.${set}.producers",
@@ -16,7 +18,7 @@ define medialibrary::oaipmh::set(
   }
 
   ini_setting { "${set}-ini_max_result_set_size":
-    path    => "/opt/apache-tomcat-${medialibrary::oai-pmh::tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
+    path    => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
     section => '',
     key_val_separator => '=',
     setting => "set.${set}.max_result_set_size",
@@ -26,7 +28,7 @@ define medialibrary::oaipmh::set(
   }
 
   ini_setting { "${set}-ini_format":
-    path    => "/opt/apache-tomcat-${medialibrary::oai-pmh::tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
+    path    => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
     section => '',
     key_val_separator => '=',
     setting => "set.${set}.format",
