@@ -232,6 +232,17 @@ class medialibrary::oaipmh (
       notify            => Service['tomcat'],
   }
 
+  ini_setting { "ini_db_driver":
+      path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
+      section           => '',
+      key_val_separator => '=',
+      setting           => 'db_driver',
+      value             => 'com.mysql.jdbc.Driver',
+      ensure            => present,
+      require           => Exec['clean_default_config'],
+      notify            => Service['tomcat'],
+  }
+
 
 
   if $sets == 'hiera_based' {
