@@ -62,7 +62,7 @@ class medialibrary::oaipmh (
       }
 
       exec { 'modify ProxyHTMLURLMap':
-        command => "/bin/sed -i '/ProxyHTMLEnable/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
+        command => "/bin/sed -i '/SetOutputFilter/a \  ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
         require => Exec['modify ProxyHTMLEnable'],
         notify  => Service['httpd'],
         unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
