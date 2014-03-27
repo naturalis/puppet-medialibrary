@@ -15,6 +15,7 @@ define medialibrary::oaipmh::set(
     value   => $producers,
     ensure  => present,
     require => Exec['clean_default_config'],
+    notify            => Service['tomcat'],
   }
 
   ini_setting { "${set}-ini_max_result_set_size":
@@ -25,6 +26,7 @@ define medialibrary::oaipmh::set(
     value   => $max_result_set_size,
     ensure  => present,
     require => Exec['clean_default_config'],
+    notify            => Service['tomcat'],
   }
 
   ini_setting { "${set}-ini_format":
@@ -35,6 +37,7 @@ define medialibrary::oaipmh::set(
     value   => $format,
     ensure  => present,
     require => Exec['clean_default_config'],
+    notify            => Service['tomcat'],
   }
 
 }
