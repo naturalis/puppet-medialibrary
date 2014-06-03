@@ -21,7 +21,7 @@ class medialibrary::oaipmh (
 
   if $use_proxy {
     include concat::setup
-    
+
     class {'apache':
       default_vhost => false,
     }
@@ -54,7 +54,7 @@ class medialibrary::oaipmh (
       }
 
     } elsif $::operatingsystem == 'Ubuntu' {
-      
+
       exec { 'modify ProxyHTMLEnable':
         command => "/bin/sed -i '/ProxyPreserveHost/a \  SetOutputFilter proxy-html' /etc/apache2/sites-available/1-${external_web_address}.conf",
         require => File["1-${external_web_address}.conf"],
@@ -66,10 +66,10 @@ class medialibrary::oaipmh (
         require => Exec['modify ProxyHTMLEnable'],
         notify  => Service['httpd'],
         unless  => "/bin/grep 'ProxyHTMLURLMap /oai-pmh /medialib/oai-pmh' /etc/apache2/sites-available/1-${external_web_address}.conf",
-      }        
+      }
     }
-   
-    
+
+
   }
 
   $jva = split($java_version, '[.]')
@@ -80,14 +80,14 @@ class medialibrary::oaipmh (
 
   $java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
   $tomcat_link_real = "http://ftp.nluug.nl/internet/apache/tomcat/tomcat-${tv_main}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.tar.gz"
-  
+
 
   exec {"download-java":
     command 	=> "/usr/bin/wget --no-check-certificate --no-cookies - --header 'Cookie: oraclelicense=accept-securebackup-cookie' '${java_link_real}' -O /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
     returns   => [0,4],
   }
-  
+
   exec {"download-tomcat":
     command 	=> "/usr/bin/wget ${tomcat_link_real} -O /opt/apache-tomcat-${tomcat_version}.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/apache-tomcat-${tomcat_version}.tar.gz",
@@ -132,7 +132,7 @@ class medialibrary::oaipmh (
                  ],
     notify    => Exec['clean_default_config'],
   }
-  
+
   exec {'clean_default_config':
     command     => "/bin/rm -fr /opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
     refreshonly => true,
@@ -147,24 +147,24 @@ class medialibrary::oaipmh (
     start     => '/bin/sh /etc/init.d/tomcat start',
     stop      => '/bin/sh /etc/init.d/tomcat stop',
   }
-  
-  # wait some seconds before writing configs. 
+
+  # wait some seconds before writing configs.
   # this is because tomcat needs to unpack the war
   #exec {"/bin/sleep ${tomcat_service_start_timeout}":
   #  require => Service['tomcat'],
   #  unless  => '/bin/find /opt/apache-tomcat-7.0.50/webapps/* -maxdepth 0 -cmin +10 | grep oai-pmh.war',
   #}
 
- 
 
-  
+
+
   file {"/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/logback.xml":
     content	=> template('medialibrary/logback.xml.erb'),
     mode    => '660',
     require => Exec['extract-war'],
   }
 
-  
+
 
   ini_setting { "ini_db_dsn":
       path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
@@ -210,16 +210,27 @@ class medialibrary::oaipmh (
       notify            => Service['tomcat'],
   }
 
-  ini_setting { "ini_date_format_pattern":
+  ini_setting { "ini_datetime_format_pattern":
       path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
       section           => '',
       key_val_separator => '=',
-      setting           => 'date_format_pattern',
+      setting           => 'datetime_format_pattern',
       value             => "yyyy-MM-dd'T'HH\:mm\:ss'Z'",
       ensure            => present,
       require           => Exec['clean_default_config'],
       notify            => Service['tomcat'],
   }
+
+	ini_setting { "ini_date_format_pattern":
+			path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
+			section           => '',
+			key_val_separator => '=',
+			setting           => 'date_format_pattern',
+			value             => "yyyy-MM-dd",
+			ensure            => present,
+			require           => Exec['clean_default_config'],
+			notify            => Service['tomcat'],
+	}
 
   ini_setting { "ini_media_server_base_url":
       path              => "/opt/apache-tomcat-${tomcat_version}/webapps/oai-pmh/WEB-INF/classes/config.properties",
@@ -252,5 +263,5 @@ class medialibrary::oaipmh (
   }
 
 
-    
+
 }
