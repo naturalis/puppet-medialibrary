@@ -48,7 +48,7 @@ class medialibrary::harvester (
   $db_dbname                          ,
 
   $numBackupGroups                    = 1,
-  
+
   $streets                            = hiera_based,
 
   $offload_immediate                  = 'true',
@@ -82,8 +82,9 @@ class medialibrary::harvester (
   $cleaner_sweep                      = 'false',
   $cleaner_unixRemove                 = 'true',
 
-  $svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaPublisher/trunk',
-  $svn_revision                       = 'latest',
+  $deploykey                          ,
+  #$svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaPublisher/trunk',
+  #$svn_revision                       = 'latest',
 
   $share_streets                      = false,
   $share_activedirectory_domain       = undef,
@@ -96,54 +97,66 @@ class medialibrary::harvester (
 
   case $::operatingsystem {
     centos, redhat: {
-      package { ['subversion','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
+      package { ['git','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['subversion','imagemagick','ncftp','php5','php5-mysql','sendmail']: ensure => installed, }
+      package { ['git','imagemagick','ncftp','php5','php5-mysql','sendmail']: ensure => installed, }
     }
-    
+
     default: {
       fail('Unrecognized operating system')
     }
   }
 
-  file { "/etc/medialibrary": ensure => directory,}
+  file { '/etc/medialibrary': ensure => directory,}
 
   file { [ $base_data_dir, $base_masters_dir ]:ensure => directory }
+
+  host { $::hostname :
+    name         => $::hostname,
+    ip           => '127.0.0.1',
+    host_aliases => [ $::hostname,$::fqdn ],
+  }
+
+  class {'::medialibrary::deploykey'
+    key => $deploykey,
+  }
+
+  vcsrepo {'/opt/medialibrary':
+    ensure   => present,
+    provider => 'git',
+    source   => 'https://github.com/naturalis/MediaPublisher',
+    user     => 'root'
+    require  => [Package['git'],Class['::medialibrary::deploykey']],
+  }
+
   
-  host { "${hostname}":
-    name          => $hostname,
-    ip            => '127.0.0.1',
-    host_aliases  => [ $hostname,$fqdn ],
-  }
 
+  # if $svn_revision == 'latest' {
+  #
+  #   vcsrepo { '/opt/medialibrary':
+  #     ensure   => latest,
+  #     provider => svn,
+  #     source   => $svn_loc,
+  #     require  => [ Package['subversion'],Host["${hostname}"] ],
+  #   }
+  #
+  # }else{
+  #
+  #     vcsrepo { '/opt/medialibrary':
+  #     ensure   => present,
+  #     provider => svn,
+  #     revision => $svn_revision,
+  #     source   => $svn_loc,
+  #     require  => [ Package['subversion'],Host["${hostname}"] ],
+  #   }
+  #
+  # }
 
-
-  if $svn_revision == 'latest' {
-
-    vcsrepo { '/opt/medialibrary':
-      ensure   => latest,
-      provider => svn,
-      source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}"] ],
-    }
-
-  }else{
-
-      vcsrepo { '/opt/medialibrary':
-      ensure   => present,
-      provider => svn,
-      revision => $svn_revision,
-      source   => $svn_loc,
-      require  => [ Package['subversion'],Host["${hostname}"] ],
-    }
-
-  }
-
-  file {"/etc/medialibrary/ftp.cfg":
+  file {'/etc/medialibrary/ftp.cfg':
     ensure  => present,
-    require => File["/etc/medialibrary"],
-    content => template("medialibrary/ftp.cfg.erb")
+    require => File['/etc/medialibrary'],
+    content => template('medialibrary/ftp.cfg.erb')
   }
 
   if $streets == 'hiera_based' {
@@ -151,13 +164,13 @@ class medialibrary::harvester (
   }else{
     create_resources('medialibrary::street', parseyaml($streets))
   }
-  
+
   Nfs::Client::Mount <<| nfstag == "${cluster_name}_mediaserver_www_directory" |>> {
-     ensure  => 'mounted',
-     mount   => '/data/www',
+    ensure => 'mounted',
+    mount  => '/data/www',
   }
 
-  
+
 
 #  if $share_streets {
 #

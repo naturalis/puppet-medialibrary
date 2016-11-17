@@ -59,20 +59,19 @@ define medialibrary::street(
 
   #logical derivitives
 
-  $offload_ftp_initDir                = ""
+  $offload_ftp_initDir                = ''
   $debug_maxFiles                     = 0
 
-  $containerDirectory                 = "${medialibrary::harvester::base_data_dir}/${street}.street"
-  $publicDirectory                    = "${medialibrary::harvester::base_data_dir}/${street}.street/${street}"
+  $publicDirectory                    = "${medialibrary::harvester::base_data_dir}/${street}"
   $harvestDirectory                   = "${publicDirectory}/harvest"
   $duplicatesDirecotry                = "${publicDirectory}/duplicates"
   $resubmitDirectory                  = "${publicDirectory}/resubmit"
   $productionDirectory                = "${publicDirectory}/production"
-  $stagingDirectory                   = "${containerDirectory}/staging"
-  $logDirectory                       = "${containerDirectory}/log"
+  $stagingDirectory                   = "/staging/${street}"
+  $logDirectory                       = "${publicDirectory}/log"
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
-  file { [$containerDirectory,
+  file { ['/staging',
           $publicDirectory,
           $productionDirectory,
           $harvestDirectory,
@@ -81,7 +80,7 @@ define medialibrary::street(
           $stagingDirectory,
           $logDirectory,
           $deadImagesDirectory ]:
-    ensure => directory,
+    ensure  => directory,
     require => File[$medialibrary::harvester::base_data_dir],
   }
 
@@ -125,7 +124,7 @@ define medialibrary::street(
       hour    => $cron_hour,
       minute  => $cron_minute,
   }
-  
+
   cron { "cron-${street}-master-www":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/publish-masters.php /etc/medialibrary/config-${street}.ini && /usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
@@ -133,7 +132,7 @@ define medialibrary::street(
       hour    => $cron_hour+1,
       minute  => $cron_minute,
   }
-  
+
   #cron { "cron-${street}-www":
   #    ensure  => present,
   #    command => "/usr/bin/php /opt/medialibrary/publish-www.php /etc/medialibrary/config-${street}.ini",
@@ -141,7 +140,7 @@ define medialibrary::street(
   #    hour    => "*",
   #    minute  => "*/10",
   #}
-  
+
   cron { "cron-${street}-cleanup":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/cleanup.php /etc/medialibrary/config-${street}.ini",
@@ -149,7 +148,7 @@ define medialibrary::street(
       hour    => "6",
       minute  => $cron_minute,
   }
-    
+
 #  @samba::server::share { $street:
 #    comment           => "Share for ${street}",
 #    path              => $publicDirectory,
@@ -161,5 +160,5 @@ define medialibrary::street(
 #    require           => Class['samba::server']
 #  }
 
-  
+
 }
