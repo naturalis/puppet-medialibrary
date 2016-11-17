@@ -62,7 +62,7 @@ define medialibrary::street(
   $offload_ftp_initDir                = ''
   $debug_maxFiles                     = 0
 
-  $publicDirectory                    = "${medialibrary::harvester::base_data_dir}/${street}"
+  $publicDirectory                    = "/medialibrary-share/${street}"
   $harvestDirectory                   = "${publicDirectory}/harvest"
   $duplicatesDirecotry                = "${publicDirectory}/duplicates"
   $resubmitDirectory                  = "${publicDirectory}/resubmit"
@@ -72,6 +72,7 @@ define medialibrary::street(
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
   file { ['/staging',
+          '/medialibrary-share',
           $publicDirectory,
           $productionDirectory,
           $harvestDirectory,
