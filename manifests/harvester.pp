@@ -118,7 +118,7 @@ class medialibrary::harvester (
     host_aliases => [ $::hostname,$::fqdn ],
   }
 
-  class {'::medialibrary::deploykey'
+  class {'::medialibrary::deploykey':
     key => $deploykey,
   }
 
@@ -129,8 +129,6 @@ class medialibrary::harvester (
     user     => 'root'
     require  => [Package['git'],Class['::medialibrary::deploykey']],
   }
-
-  
 
   # if $svn_revision == 'latest' {
   #
