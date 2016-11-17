@@ -122,11 +122,11 @@ class medialibrary::harvester (
     key => $deploykey,
   }
 
-  vcsrepo {'/opt/medialibrary':
+  vcsrepo { '/opt/medialibrary':
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/MediaPublisher',
-    user     => 'root'
+    user     => 'root',
     require  => [Package['git'],Class['::medialibrary::deploykey']],
   }
 
