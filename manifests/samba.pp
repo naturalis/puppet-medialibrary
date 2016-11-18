@@ -8,13 +8,13 @@ class medialibrary::samba (
   $security             = 'ads',
   $sharename            = 'harvester-share',
   $sharecomment         = 'Share for getting your stuff harvested',
-  $path                 = '/medialibrary',
+  $path                 = '/medialibrary-share',
   $read_only            = false,
   $target_ou            = 'Computers',
   $nsswitch             = true,
-  $winbindaccount       = 'DomainAdmin',
-  $winbindpassword      = 'DomainAdminPass',
-  $winbindrealm         = 'DOMAIN',
+  $winbindaccount       ,
+  $winbindpassword      ,
+  $winbindrealm         ,
   $load_printers        = 'No',
   $disable_spoolss      = 'Yes',
   $printing             = 'bsd',
@@ -23,9 +23,6 @@ class medialibrary::samba (
   ){
 
 
-  file { $path :
-    ensure         => 'directory'
-  }
 
   if ($disable_osprober == true){
     file { '/usr/bin/os-prober':
