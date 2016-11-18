@@ -71,9 +71,7 @@ define medialibrary::street(
   $logDirectory                       = "${publicDirectory}/log"
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
-  file { ['/staging',
-          '/medialibrary-share',
-          $publicDirectory,
+  file { [$publicDirectory,
           $productionDirectory,
           $harvestDirectory,
           $duplicatesDirecotry,
