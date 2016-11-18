@@ -110,7 +110,7 @@ class medialibrary::harvester (
 
   file { '/etc/medialibrary': ensure => directory,}
 
-  file { [ $base_data_dir, $base_masters_dir ]:ensure => directory }
+  file { [ $base_data_dir, $base_masters_dir, $base_www_dir ]: ensure => directory }
 
   host { $::hostname :
     name         => $::hostname,
@@ -163,10 +163,10 @@ class medialibrary::harvester (
     create_resources('medialibrary::street', parseyaml($streets))
   }
 
-  Nfs::Client::Mount <<| nfstag == "${cluster_name}_mediaserver_www_directory" |>> {
-    ensure => 'mounted',
-    mount  => '/data/www',
-  }
+  # Nfs::Client::Mount <<| nfstag == "${cluster_name}_mediaserver_www_directory" |>> {
+  #   ensure => 'mounted',
+  #   mount  => '/data/www',
+  # }
 
 
 
