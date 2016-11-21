@@ -3,8 +3,8 @@
 #
 class medialibrary::dataserver(
   $readwrite_ips   = ['127.0.0.1/32'],
-  $readonly_ips = ['127.0.0.1/32]',
-  $exported_dirs = ['/data/masters','/data/www']
+  $readonly_ips = ['127.0.0.1/32'],
+  $exported_dirs = ['/data/masters','/data/www'],
 )
 {
 
