@@ -8,6 +8,10 @@ class medialibrary::dataserver(
 )
 {
 
+  file {concat(['/data'], $exported_dirs):
+    ensure=> directory
+  }
+
   $rw_setting = '(rw,insecure,async,no_root_squash)'
   $ro_setting = '(ro,insecure,async,no_root_squash)'
   $rw_array = suffix($readwrite_ips,$rw_setting)
