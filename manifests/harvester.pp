@@ -42,6 +42,7 @@ class medialibrary::harvester (
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
 
+  $dataserver                        = '127.0.0.1',
   $db_host                            ,
   $db_user                            ,
   $db_password                        ,
@@ -131,6 +132,22 @@ class medialibrary::harvester (
     require  => [Package['git'],Class['::medialibrary::deploykey']],
   }
 
+  class {'::nfs':
+    client_enabled => true,
+    server_enabled => false,
+  }
+
+  nfs::client::mount {'/data/www':
+    server  => $::dataserver,
+    share   => '/data/www',
+    require => File['/data/www']
+  }
+
+nfs::client::mount {'/data/masters':
+  server  => $::dataserver,
+  share   => '/data/masters',
+  require => File['/data/masters'],
+}
   # if $svn_revision == 'latest' {
   #
   #   vcsrepo { '/opt/medialibrary':
