@@ -8,9 +8,6 @@ class medialibrary::dataserver(
 )
 {
 
-  file {concat(['/data'], $exported_dirs):
-    ensure=> directory
-  }
 
   $rw_setting = '(rw,insecure,async,no_root_squash)'
   $ro_setting = '(ro,insecure,async,no_root_squash)'
@@ -18,6 +15,13 @@ class medialibrary::dataserver(
   $ro_array = suffix($readonly_ips,$ro_setting)
   $combined_array = concat($rw_array,$ro_array)
   $export_string = join($combined_array, ' ')
+
+  $directories = concat(['/data'],$exported_dirs)
+
+  file { $directories :
+    ensure => directory
+  }
+
 
   class {'::nfs':
     server_enabled => true,
