@@ -11,10 +11,12 @@ class medialibrary::deploykey (
   } ->
 
   file {'/root/.ssh/id_rsa':
-    ensure => present,
+    ensure  => present,
     content => $key,
     mode    => '0600',
   } ->
 
-  exec {'/usr/bin/ssh-keyscan github.com >> /root/.ssh/known_hosts': }
+  exec {'/usr/bin/ssh-keyscan github.com >> /root/.ssh/known_hosts':
+    unless => '/bin/grep github.com /root/.ssh/known_hosts',
+  }
 }
