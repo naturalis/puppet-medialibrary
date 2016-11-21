@@ -138,13 +138,13 @@ class medialibrary::harvester (
   }
 
   nfs::client::mount {'/data/www':
-    server  => $::dataserver,
+    server  => $dataserver,
     share   => "/data/www",
     require => File['/data/www'],
   }
 
 nfs::client::mount {'/data/masters':
-  server  => $::dataserver,
+  server  => $dataserver,
   share   => "/data/masters",
   require => File['/data/masters'],
 }
