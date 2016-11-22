@@ -9,6 +9,7 @@ class medialibrary::mediaserver (
   $dataserver_ip                      ,
   $media_server_url                   ,
   $deploykey                          ,
+  $dataserver                         ,
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
@@ -16,7 +17,7 @@ class medialibrary::mediaserver (
   ) {
 
 
-  package { 'git':
+  package { ['git','php5-mysql']:
     ensure => present,
   }
   # Include apache modules with php
@@ -36,7 +37,11 @@ class medialibrary::mediaserver (
         path           => '/var/www/mediaserver',
         allow_override => 'All' }
         ],
-      require     => Vcsrepo['/var/www/mediaserver'],
+      require     => [
+        Vcsrepo['/var/www/mediaserver'],
+        Package['php5-mysql']
+        ],
+
   }
 
   file { [$base_data_dir,
@@ -79,6 +84,23 @@ class medialibrary::mediaserver (
     mode    => '0660',
     require => Vcsrepo['/var/www/mediaserver'],
     group   => 'www-data',
+  }
+
+  class {'::nfs':
+    client_enabled => true,
+    server_enabled => false,
+  }
+
+  nfs::client::mount {'/data/www':
+    server  => $dataserver,
+    share   => '/data/www',
+    require => File['/data/www'],
+  }
+
+  nfs::client::mount {'/data/masters':
+    server  => $dataserver,
+    share   => '/data/masters',
+    require => File['/data/masters'],
   }
 
 }
