@@ -9,6 +9,7 @@ class medialibrary::mediaserver (
   $dataserver_ip                      ,
   $media_server_url                   ,
   $deploykey                          ,
+  $log_level                          = 'DEBUG',
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
