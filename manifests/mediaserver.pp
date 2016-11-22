@@ -17,7 +17,7 @@ class medialibrary::mediaserver (
 
 
   package { 'git':
-    ensure => installed,
+    ensure => present,
   }
   # Include apache modules with php
   class { 'apache':
@@ -59,7 +59,10 @@ class medialibrary::mediaserver (
     provider => 'git',
     source   => 'git@github.com:naturalis/MediaServer.git',
     user     => 'root',
-    require  => [Package['git'],Class['::medialibrary::deploykey']],
+    require  => [
+      Package['git'],
+      Class['::medialibrary::deploykey']
+      ],
   }
 
   file {'/var/www/mediaserver/static.ini':
