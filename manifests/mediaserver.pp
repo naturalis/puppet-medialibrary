@@ -58,7 +58,7 @@ class medialibrary::mediaserver (
   vcsrepo { '/var/www/mediaserver':
     ensure   => present,
     provider => 'git',
-    source   => 'https://github.com/naturalis/medialibrary-mediaserver'
+    source   => 'https://github.com/naturalis/medialibrary-mediaserver',
     #source   => 'git@github.com:naturalis/MediaServer.git',
     #user     => 'root',
     require  => [
