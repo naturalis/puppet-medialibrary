@@ -9,7 +9,6 @@ class medialibrary::mediaserver (
   $dataserver_ip                      ,
   $media_server_url                   ,
   $deploykey                          ,
-  $dataserver                         ,
   $base_data_dir                      = '/data',
   $base_www_dir                       = '/data/www',
   $base_masters_dir                   = '/data/masters',
@@ -92,13 +91,13 @@ class medialibrary::mediaserver (
   }
 
   nfs::client::mount {'/data/www':
-    server  => $dataserver,
+    server  => $dataserver_ip,
     share   => '/data/www',
     require => File['/data/www'],
   }
 
   nfs::client::mount {'/data/masters':
-    server  => $dataserver,
+    server  => $dataserver_ip,
     share   => '/data/masters',
     require => File['/data/masters'],
   }
