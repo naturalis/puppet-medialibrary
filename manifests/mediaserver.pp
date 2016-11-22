@@ -26,6 +26,7 @@ class medialibrary::mediaserver (
   }
 
   class{ 'apache::mod::php': }
+  class{ 'apache::mod::rewrite': }
 
   apache::vhost { $media_server_url:
       port        => '80',
