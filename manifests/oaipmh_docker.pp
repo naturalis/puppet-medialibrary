@@ -95,7 +95,8 @@ class medialibrary::oaipmh_docker(
   docker::run {'medialibrary-oai-pmh':
     image   => 'tomcat',
     ports   => "${listen_port}:8080",
-    volumes => ['/opt/oai-pmh/extract:/usr/local/tomcat/webapps/ROOT'],
+    volumes => ['/opt/oai-pmh/extract:/usr/local/tomcat/webapps/ROOT',
+                "${logfile_location}:${logfile_location}"],
     require => File['/opt/oai-pmh/extract'],
   }
 
