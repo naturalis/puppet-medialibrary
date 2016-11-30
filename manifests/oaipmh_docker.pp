@@ -32,7 +32,7 @@ class medialibrary::oaipmh_docker(
 
   file {'/opt/oai-pmh/oai-pmh.war':
     ensure  => present,
-    source  => 'puppet:///modules/stargazer/oai-pmh.war',
+    source  => 'puppet:///modules/medialibrary/oai-pmh.war',
     require => File['/opt/oai-pmh/extract'],
     notify  => Exec['/usr/bin/unzip /opt/oai-pmh/oai-pmh.war -d /opt/oai-pmh/extract'],
   }
