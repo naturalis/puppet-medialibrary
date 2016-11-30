@@ -43,6 +43,7 @@ class medialibrary::oaipmh_docker(
   }
 
   file {'/opt/oai-pmh/extract/WEB-INF/classes/logback.xml':
+    ensure  => absent,
     content => template('medialibrary/logback.xml.erb'),
     mode    => '0660',
     require => Exec['/usr/bin/unzip /opt/oai-pmh/oai-pmh.war -d /opt/oai-pmh/extract'],
@@ -103,7 +104,7 @@ class medialibrary::oaipmh_docker(
     image   => 'tomcat',
     ports   => "${listen_port}:8080",
     volumes => ['/opt/oai-pmh/extract:/usr/local/tomcat/webapps/ROOT',
-                '/var/log/docker-medialibrary-oai-pmh:/var/log'],
+                '/var/log/docker-medialibrary-oai-pmh:/usr/local/tomcat/logs'],
     require => File['/opt/oai-pmh/extract'],
   }
 
