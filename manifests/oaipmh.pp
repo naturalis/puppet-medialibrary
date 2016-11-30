@@ -6,10 +6,10 @@ class medialibrary::oaipmh (
 	$media_server_url,
 	$logfile_location                = '/var/log/oai-pmh.log',
 	$tomcat_service_start_timeout    = '10',
-	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz',
-	$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz',
-  $java_version                    = '7.51',
-  $tomcat_version                  = '7.0.52',
+	$tomcat_link                     = 'http://ftp.nluug.nl/internet/apache/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.73.tar.gz',
+	#$java_link                       = 'http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz',
+  #$java_version                    = '7.51',
+  $tomcat_version                  = '7.0.73',
   $sets                            = 'hiera_based',
   $use_proxy                       = true,
   $external_web_address            = 'webservices.naturalis.nl',
@@ -72,33 +72,36 @@ class medialibrary::oaipmh (
 
   }
 
-  $jva = split($java_version, '[.]')
-  $jva_dwn_version = "${jva[0]}u${jva[1]}"
-  $jva_extract_version = "jdk1.${jva[0]}.0_${jva[1]}"
+	package { 'openjdk-7-jre':
+		ensure => installed,
+	}
+  #$jva = split($java_version, '[.]')
+  #$jva_dwn_version = "${jva[0]}u${jva[1]}"
+  #$jva_extract_version = "jdk1.${jva[0]}.0_${jva[1]}"
   $tv = split($tomcat_version,'[.]')
   $tv_main = $tv[0]
 
-  $java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
+  #$java_link_real = "http://download.oracle.com/otn-pub/java/jdk/${jva_dwn_version}-b13/jdk-${jva_dwn_version}-linux-x64.tar.gz"
   $tomcat_link_real = "http://ftp.nluug.nl/internet/apache/tomcat/tomcat-${tv_main}/v${tomcat_version}/bin/apache-tomcat-${tomcat_version}.tar.gz"
 
 
-  exec {"download-java":
-    command 	=> "/usr/bin/wget --no-check-certificate --no-cookies - --header 'Cookie: oraclelicense=accept-securebackup-cookie' '${java_link_real}' -O /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
-    unless  	=> "/usr/bin/test -f /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
-    returns   => [0,4],
-  }
+  # exec {"download-java":
+  #   command 	=> "/usr/bin/wget --no-check-certificate --no-cookies - --header 'Cookie: oraclelicense=accept-securebackup-cookie' '${java_link_real}' -O /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
+  #   unless  	=> "/usr/bin/test -f /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
+  #   returns   => [0,4],
+  # }
 
   exec {"download-tomcat":
     command 	=> "/usr/bin/wget ${tomcat_link_real} -O /opt/apache-tomcat-${tomcat_version}.tar.gz",
     unless  	=> "/usr/bin/test -f /opt/apache-tomcat-${tomcat_version}.tar.gz",
   }
 
-  exec {"extract-java":
-    command   => "/bin/tar -xzf /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
-    cwd       => "/opt",
-    unless    => "/usr/bin/test -d /opt/${jva_extract_version}",
-    require   => Exec["download-java"],
-  }
+  # exec {"extract-java":
+  #   command   => "/bin/tar -xzf /opt/jdk-${jva_dwn_version}-linux-x64.tar.gz",
+  #   cwd       => "/opt",
+  #   unless    => "/usr/bin/test -d /opt/${jva_extract_version}",
+  #   require   => Exec["download-java"],
+  # }
 
   exec {"extract-tomcat":
     command   => "/bin/tar -xzf /opt/apache-tomcat-${tomcat_version}.tar.gz",
@@ -141,7 +144,7 @@ class medialibrary::oaipmh (
   service { 'tomcat':
     enable    => true,
     ensure    => running,
-    require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Exec["extract-java"]],
+    require   => [File['/etc/init.d/tomcat'],Exec["extract-tomcat"],Package['openjdk-7-jre']],
     hasstatus => 'false',
     status    => '/bin/ps aux  | /bin/grep apache-tomcat | /bin/grep -v grep',
     start     => '/bin/sh /etc/init.d/tomcat start',
