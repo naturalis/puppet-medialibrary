@@ -46,6 +46,7 @@ class medialibrary::oaipmh_docker(
     content => template('medialibrary/logback.xml.erb'),
     mode    => '0660',
     require => Exec['/usr/bin/unzip /opt/oai-pmh/oai-pmh.war -d /opt/oai-pmh/extract'],
+    notify  => Service['docker-medialibrary-oai-pmh']
   }
 
   exec {'/bin/rm -fr /opt/oai-pmh/extract/WEB-INF/classes/config.properties' :
