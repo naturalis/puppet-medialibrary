@@ -26,7 +26,7 @@ class medialibrary::oaipmh_docker(
 
   package {'unzip':}
 
-  file {['/opt/oai-pmh','/opt/oai-pmh/extract']:
+  file {['/opt/oai-pmh','/opt/oai-pmh/extract','/var/log/docker-medialibrary-oai-pmh']:
     ensure => 'directory',
   }
 
@@ -96,7 +96,7 @@ class medialibrary::oaipmh_docker(
     image   => 'tomcat',
     ports   => "${listen_port}:8080",
     volumes => ['/opt/oai-pmh/extract:/usr/local/tomcat/webapps/ROOT',
-                "${logfile_location}:${logfile_location}"],
+                '/var/log/docker-medialibrary-oai-pmh':'/var/log'],
     require => File['/opt/oai-pmh/extract'],
   }
 
