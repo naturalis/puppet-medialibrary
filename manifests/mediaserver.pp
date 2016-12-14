@@ -35,7 +35,7 @@ class medialibrary::mediaserver (
       port            => 'value'> '80',
       docroot         => '/var/www/mediaserver',
       servername      => $media_server_url,
-      custom_fragment => "XSendFile on\nXSendFilePath ${base_masters_dir}"
+      custom_fragment => "XSendFile on\nXSendFilePath ${base_masters_dir}",
       directories     => [{
           path           => '/var/www/mediaserver',
           allow_override => 'All' }
