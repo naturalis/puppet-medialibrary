@@ -32,7 +32,7 @@ class medialibrary::mediaserver (
   class{ 'apache::mod::xsendfile': }
 
   apache::vhost { $media_server_url:
-      port            => 'value'> '80',
+      #port            => 'value'> '80',
       docroot         => '/var/www/mediaserver',
       servername      => $media_server_url,
       custom_fragment => "XSendFile on\nXSendFilePath ${base_masters_dir}",
