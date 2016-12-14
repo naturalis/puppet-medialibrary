@@ -8,7 +8,8 @@ define medialibrary::street(
   $fileTypes              = 'jpg,jpeg,tiff,tif,png',
   $log_stdout             = 'true',
   $log_level              = 'INFO',
-  $mail_onsuccess         = 'true'
+  $mail_onsuccess         = 'true',
+  $keep_log_files_days    = 60,
 
 ) {
 
@@ -143,6 +144,14 @@ define medialibrary::street(
   cron { "cron-${street}-cleanup":
       ensure  => present,
       command => "/usr/bin/php /opt/medialibrary/cleanup.php /etc/medialibrary/config-${street}.ini",
+      user    => root,
+      hour    => "6",
+      minute  => $cron_minute,
+  }
+
+  cron { "cron-${street}-logcleanup":
+      ensure  => present,
+      command => "/usr/bin/find ${logDirectory} -type f -mtime +${keep_log_files_days} -delete",
       user    => root,
       hour    => "6",
       minute  => $cron_minute,

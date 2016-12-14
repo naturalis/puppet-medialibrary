@@ -144,11 +144,11 @@ class medialibrary::harvester (
     require => File['/data/www'],
   }
 
-nfs::client::mount {'/data/masters':
-  server  => $dataserver,
-  share   => "/data/masters",
-  require => File['/data/masters'],
-}
+  nfs::client::mount {'/data/masters':
+    server  => $dataserver,
+    share   => "/data/masters",
+    require => File['/data/masters'],
+  }
   # if $svn_revision == 'latest' {
   #
   #   vcsrepo { '/opt/medialibrary':
