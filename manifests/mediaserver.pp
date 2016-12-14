@@ -22,25 +22,28 @@ class medialibrary::mediaserver (
   }
   # Include apache modules with php
   class { 'apache':
-    default_mods => true,
-    mpm_module   => 'prefork',
+    default_mods  => true,
+    mpm_module    => 'prefork',
+    default_vhost => false,
   }
 
   class{ 'apache::mod::php': }
   class{ 'apache::mod::rewrite': }
+  class{ 'apache::mod::xsendfile': }
 
   apache::vhost { $media_server_url:
-      port        => '80',
-      docroot     => '/var/www/mediaserver',
-      servername  => $media_server_url,
-      directories => [{
-        path           => '/var/www/mediaserver',
-        allow_override => 'All' }
-        ],
-      require     => [
-        Vcsrepo['/var/www/mediaserver'],
-        Package['php5-mysql']
-        ],
+      port            => 'value'> '80',
+      docroot         => '/var/www/mediaserver',
+      servername      => $media_server_url,
+      custom_fragment => "XSendFile on\nXSendFilePath ${base_masters_dir}"
+      directories     => [{
+          path           => '/var/www/mediaserver',
+          allow_override => 'All' }
+          ],
+      require         => [
+          Vcsrepo['/var/www/mediaserver'],
+          Package['php5-mysql']
+          ],
 
   }
 
@@ -56,9 +59,9 @@ class medialibrary::mediaserver (
     host_aliases => [ $::hostname,$media_server_url ],
   }
 
-  class {'::medialibrary::deploykey':
-    key => $deploykey,
-  }
+  # class {'::medialibrary::deploykey':
+  #   key => $deploykey,
+  # }
 
   vcsrepo { '/var/www/mediaserver':
     ensure   => present,
@@ -66,10 +69,7 @@ class medialibrary::mediaserver (
     source   => 'https://github.com/naturalis/medialibrary-mediaserver',
     #source   => 'git@github.com:naturalis/MediaServer.git',
     #user     => 'root',
-    require  => [
-      Package['git'],
-      Class['::medialibrary::deploykey']
-      ],
+    require  => Package['git'],
   }
 
   file {'/var/www/mediaserver/static.ini':
