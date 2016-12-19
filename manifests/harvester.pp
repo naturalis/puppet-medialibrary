@@ -185,6 +185,7 @@ class medialibrary::harvester (
   @sensu::check {'check for offload_logs':
     command => '/opt/check_offload_logs.sh',
     require => File['/opt/check_offload_logs.sh'],
+    tag     => 'central_sensu',
   }
 
   file {'/etc/medialibrary/ftp.cfg':
