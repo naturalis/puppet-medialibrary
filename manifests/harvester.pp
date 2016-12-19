@@ -179,7 +179,7 @@ class medialibrary::harvester (
       else
         echo No Errors in backup since $(date "+%Y-%m-%d") ;
      fi',
-     chmod => '775'
+    mode  => '0775',
   }
 
   file {'/etc/medialibrary/ftp.cfg':
