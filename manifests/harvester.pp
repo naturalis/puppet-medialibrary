@@ -170,6 +170,18 @@ class medialibrary::harvester (
   #
   # }
 
+  file {'/opt/check_offload_logs.sh' :
+    ensure  => 'present',
+    content => '#!/bin/sh
+    if [ `grep $(date "+%Y-%m-%d")  /medialibrary-share/_backup/log/*.Offloader.*.log  | grep ERROR | wc -l` -ne \'0\' ] ;
+      then
+        grep $(date "+%Y-%m-%d")  /medialibrary-share/_backup/log/*.Offloader.*.log  | grep ERROR ; return 2;
+      else
+        echo No Errors in backup since $(date "+%Y-%m-%d") ;
+     fi',
+     chmod => '775'
+  }
+
   file {'/etc/medialibrary/ftp.cfg':
     ensure  => present,
     require => File['/etc/medialibrary'],
