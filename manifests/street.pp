@@ -73,6 +73,7 @@ define medialibrary::street(
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
   file { [$publicDirectory,
+          $
           $productionDirectory,
           $harvestDirectory,
           $duplicatesDirecotry,

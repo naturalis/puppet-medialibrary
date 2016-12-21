@@ -111,8 +111,8 @@ class medialibrary::harvester (
 
   file { '/etc/medialibrary': ensure => directory,}
 
-  file { [ $base_data_dir, $base_masters_dir, $base_www_dir,'/staging',
-          '/medialibrary-share' ]: ensure => directory }
+  file { [ $base_data_dir, $base_masters_dir, $base_www_dir,
+          '/medialibrary-share','/medialibrary-share/staging' ]: ensure => directory }
 
   host { $::hostname :
     name         => $::hostname,
