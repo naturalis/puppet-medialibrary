@@ -68,7 +68,7 @@ define medialibrary::street(
   $duplicatesDirecotry                = "${publicDirectory}/duplicates"
   $resubmitDirectory                  = "${publicDirectory}/resubmit"
   $productionDirectory                = "${publicDirectory}/production"
-  $stagingDirectory                   = "/staging/${street}"
+  $stagingDirectory                   = "/medialibrary-share/staging/${street}"
   $logDirectory                       = "${publicDirectory}/log"
   $deadImagesDirectory                = "${publicDirectory}/errors"
 
@@ -107,7 +107,7 @@ define medialibrary::street(
   }
 
   if !defined(Cron['offload']) {
-    $offload_job = "/bin/bash -c 'for i in {0..${nb}}; do (/usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-_backup.ini \$i &) ; sleep 5 ; done'"
+    $offload_job = "/bin/bash -c 'for i in {0..${nb}}; do (/usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-_backup.ini \$i &) ; sleep 120 ; done'"
     cron { 'offload':
       ensure  => present,
       command => $offload_job,
