@@ -18,6 +18,8 @@ class medialibrary::dataserver(
 
   $directories = concat(['/data'],$exported_dirs)
 
+  include 'docker'
+
   file { $directories :
     ensure => directory
   }
