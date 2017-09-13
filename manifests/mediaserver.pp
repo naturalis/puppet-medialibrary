@@ -17,7 +17,7 @@ class medialibrary::mediaserver (
   ) {
 
 
-  package { ['git','php5-mysql']:
+  package { ['git','php5-mysql','php5-gd']:
     ensure => present,
   }
   # Include apache modules with php
