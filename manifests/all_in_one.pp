@@ -65,7 +65,7 @@ class medialibrary::all_in_one(
       package { ['git','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['git','imagemagick','ncftp','php5','php5-mysql','sendmail','php5-mysql','php5-gd']: ensure => installed, }
+      package { ['git','imagemagick','ncftp','php5','sendmail','php5-mysql','php5-gd']: ensure => installed, }
     }
 
     default: {
