@@ -80,16 +80,6 @@ class medialibrary::all_in_one(
   file { [ $base_data_dir, $base_masters_dir, $base_www_dir,
           '/medialibrary-share','/medialibrary-share/staging' ]: ensure => directory }
 
-  host { $::hostname :
-    name         => $::hostname,
-    ip           => '127.0.0.1',
-    host_aliases => [ $::hostname,$::fqdn ],
-  }
-
-  class {'::medialibrary::deploykey':
-    key => $deploykey,
-  }
-
   vcsrepo { '/opt/medialibrary':
     ensure   => present,
     provider => 'git',
