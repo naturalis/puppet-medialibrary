@@ -84,7 +84,7 @@ class medialibrary::all_in_one(
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/medialibrary-publisher',
-    require  => [Package['git'],Class['::medialibrary::deploykey']],
+    require  => [Package['git']],
   }
 
 
