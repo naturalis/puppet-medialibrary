@@ -100,7 +100,7 @@ define medialibrary::street(
 
 #  }
 
-  file {"/etc/medialibrary/config-${street}.ini":
+  file {"/etc/medialibrary/config_${street}.ini":
     ensure  => present,
     content => template("medialibrary/config.ini.erb"),
     require => File['/etc/medialibrary'],
