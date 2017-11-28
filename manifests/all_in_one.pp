@@ -174,7 +174,7 @@ class medialibrary::all_in_one(
     require => Vcsrepo['/var/www/mediaserver'],
   }
 
-  file {$log_directory:
+  file {'/var/www/mediaserver/log':
     ensure  => directory,
     mode    => '0660',
     require => Vcsrepo['/var/www/mediaserver'],
