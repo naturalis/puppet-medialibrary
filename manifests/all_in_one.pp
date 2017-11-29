@@ -51,7 +51,7 @@ class medialibrary::all_in_one(
 
   #$svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaPublisher/trunk',
   #$svn_revision                       = 'latest',
-
+  $media_server_url		      = 'medialib.naturalis.nl',
   $share_streets                      = false,
   $share_activedirectory_domain       = undef,
   $share_win_domain_admin_user        = undef,
@@ -65,7 +65,7 @@ class medialibrary::all_in_one(
       package { ['git','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['git','imagemagick','ncftp','php5','sendmail','php5-mysql','php5-gd']: ensure => installed, }
+      package { ['git','imagemagick','ncftp','php','sendmail','php-mysql','php-gd']: ensure => installed, }
     }
 
     default: {
@@ -140,7 +140,7 @@ class medialibrary::all_in_one(
           ],
       require         => [
           Vcsrepo['/var/www/mediaserver'],
-          Package['php5-mysql']
+          Package['php-mysql']
           ],
 
   }
