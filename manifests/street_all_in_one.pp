@@ -1,4 +1,4 @@
-define medialibrary::street(
+define medialibrary::street_all_in_one(
   $producer               ,
   $mail_to                ,
   $cron_hour              ,
@@ -15,46 +15,46 @@ define medialibrary::street(
 
   # variables from main (and more general)
 
-  $base_data_dir                      = $medialibrary::harvester::base_data_dir
-  $masterDirectory                    = $medialibrary::harvester::base_masters_dir
-  $wwwDirectory                       = $medialibrary::harvester::base_www_dir
+  $base_data_dir                      = $medialibrary::all_in_one::base_data_dir
+  $masterDirectory                    = $medialibrary::all_in_one::base_masters_dir
+  $wwwDirectory                       = $medialibrary::all_in_one::base_www_dir
 
-  $db_host                            = $medialibrary::harvester::db_host
-  $db_user                            = $medialibrary::harvester::db_user
-  $db_password                        = $medialibrary::harvester::db_password
-  $db_dbname                          = $medialibrary::harvester::db_dbname
+  $db_host                            = $medialibrary::all_in_one::db_host
+  $db_user                            = $medialibrary::all_in_one::db_user
+  $db_password                        = $medialibrary::all_in_one::db_password
+  $db_dbname                          = $medialibrary::all_in_one::db_dbname
 
-  $numBackupGroups                    = $medialibrary::harvester::numBackupGroups
-  $offload_immediate                  = $medialibrary::harvester::offload_immediate
-  $offload_method                     = $medialibrary::harvester::offload_method
-  $offload_tar_maxSize                = $medialibrary::harvester::offload_tar_maxSize
-  $offload_tar_maxFiles               = $medialibrary::harvester::offload_tar_maxFiles
-  $offload_ftp_host                   = $medialibrary::harvester::offload_ftp_host
-  $offload_ftp_user                   = $medialibrary::harvester::offload_ftp_user
-  $offload_ftp_password               = $medialibrary::harvester::offload_ftp_password
-  $offload_ftp_passive                = $medialibrary::harvester::offload_ftp_passive
-  $offload_ftp_reconnectPerFile       = $medialibrary::harvester::offload_ftp_reconnectPerFile
-  $offload_ftp_maxConnectionAttempts  = $medialibrary::harvester::offload_ftp_maxConnectionAttempts
-  $offload_ftp_maxUploadAttempts      = $medialibrary::harvester::offload_ftp_maxUploadAttempts
+  $numBackupGroups                    = $medialibrary::all_in_one::numBackupGroups
+  $offload_immediate                  = $medialibrary::all_in_one::offload_immediate
+  $offload_method                     = $medialibrary::all_in_one::offload_method
+  $offload_tar_maxSize                = $medialibrary::all_in_one::offload_tar_maxSize
+  $offload_tar_maxFiles               = $medialibrary::all_in_one::offload_tar_maxFiles
+  $offload_ftp_host                   = $medialibrary::all_in_one::offload_ftp_host
+  $offload_ftp_user                   = $medialibrary::all_in_one::offload_ftp_user
+  $offload_ftp_password               = $medialibrary::all_in_one::offload_ftp_password
+  $offload_ftp_passive                = $medialibrary::all_in_one::offload_ftp_passive
+  $offload_ftp_reconnectPerFile       = $medialibrary::all_in_one::offload_ftp_reconnectPerFile
+  $offload_ftp_maxConnectionAttempts  = $medialibrary::all_in_one::offload_ftp_maxConnectionAttempts
+  $offload_ftp_maxUploadAttempts      = $medialibrary::all_in_one::offload_ftp_maxUploadAttempts
 
-  $resizeWhen_fileType                = $medialibrary::harvester::resizeWhen_fileType
-  $resizeWhen_imageSize               = $medialibrary::harvester::resizeWhen_imageSize
+  $resizeWhen_fileType                = $medialibrary::all_in_one::resizeWhen_fileType
+  $resizeWhen_imageSize               = $medialibrary::all_in_one::resizeWhen_imageSize
 
-  $imagemagick_convertCommand         = $medialibrary::harvester::imagemagick_convertCommand
-  $imagemagick_resizeCommand          = $medialibrary::harvester::imagemagick_resizeCommand
-  $imagemagick_maxErrors              = $medialibrary::harvester::imagemagick_maxErrors
+  $imagemagick_convertCommand         = $medialibrary::all_in_one::imagemagick_convertCommand
+  $imagemagick_resizeCommand          = $medialibrary::all_in_one::imagemagick_resizeCommand
+  $imagemagick_maxErrors              = $medialibrary::all_in_one::imagemagick_maxErrors
 
-  $imagemagick_command                = $medialibrary::harvester::imagemagick_command
-  $imagemagick_large_size             = $medialibrary::harvester::imagemagick_large_size
-  $imagemagick_large_quality          = $medialibrary::harvester::imagemagick_large_quality
-  $imagemagick_medium_size            = $medialibrary::harvester::imagemagick_medium_size
-  $imagemagick_medium_quality         = $medialibrary::harvester::imagemagick_medium_quality
-  $imagemagick_small_size             = $medialibrary::harvester::imagemagick_small_size
-  $imagemagick_small_quality          = $medialibrary::harvester::imagemagick_small_quality
+  $imagemagick_command                = $medialibrary::all_in_one::imagemagick_command
+  $imagemagick_large_size             = $medialibrary::all_in_one::imagemagick_large_size
+  $imagemagick_large_quality          = $medialibrary::all_in_one::imagemagick_large_quality
+  $imagemagick_medium_size            = $medialibrary::all_in_one::imagemagick_medium_size
+  $imagemagick_medium_quality         = $medialibrary::all_in_one::imagemagick_medium_quality
+  $imagemagick_small_size             = $medialibrary::all_in_one::imagemagick_small_size
+  $imagemagick_small_quality          = $medialibrary::all_in_one::imagemagick_small_quality
 
-  $cleaner_minDaysOld                 = $medialibrary::harvester::cleaner_minDaysOld
-  $cleaner_sweep                      = $medialibrary::harvester::cleaner_sweep
-  $cleaner_unixRemove                 = $medialibrary::harvester::cleaner_unixRemove
+  $cleaner_minDaysOld                 = $medialibrary::all_in_one::cleaner_minDaysOld
+  $cleaner_sweep                      = $medialibrary::all_in_one::cleaner_sweep
+  $cleaner_unixRemove                 = $medialibrary::all_in_one::cleaner_unixRemove
 
 
 
@@ -81,7 +81,7 @@ define medialibrary::street(
           $logDirectory,
           $deadImagesDirectory ]:
     ensure  => directory,
-    require => File[$medialibrary::harvester::base_data_dir],
+    require => File[$medialibrary::all_in_one::base_data_dir],
   }
 
 
@@ -89,7 +89,7 @@ define medialibrary::street(
     $offload_command = "tar chPf - \"%local_dir%\" | ncftpput -c -f /etc/medialibrary/ftp.cfg %remote_dir%/%name%"
   }
 
-  $nb = $medialibrary::harvester::numBackupGroups -1
+  $nb = $medialibrary::all_in_one::numBackupGroups -1
 
 #  if !defined(Augeas['cron_offload']) {
 #    $offload_job = "for i in {0..${nb}}; do /usr/bin/php /opt/medialibrary/offload.php /etc/medialibrary/config-${street}.ini \$i & ; done"

@@ -51,11 +51,26 @@ class medialibrary::all_in_one(
 
   #$svn_loc                            = 'svn://dev2.etibioinformatics.nl/NBCMediaLib/MediaPublisher/trunk',
   #$svn_revision                       = 'latest',
+  $db_mediaserver_user                = 'medialibrary',
+  $db_mediaserver_password            = 'medialibrary',
+  $log_level                          = 'DEBUG',
+  $log_directory                      = '/var/log/mediaserver/',
   $media_server_url		      = 'medialib.naturalis.nl',
   $share_streets                      = false,
   $share_activedirectory_domain       = undef,
   $share_win_domain_admin_user        = undef,
   $share_win_domain_admin_password    = undef,
+
+  $medialib_revision		      = 'master',
+  $medialib_web_revision	      = 'master',
+
+  $aws_region 			      = 'eu-central-1',
+  $aws_version 			      = 'latest',
+  $aws_bucket  			      = 'medialib-archive-test',
+  $aws_access_key,		      
+  $aws_secret_key,
+
+
   ) {
 
   include stdlib
@@ -65,7 +80,7 @@ class medialibrary::all_in_one(
       package { ['git','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['git','imagemagick','ncftp','php','sendmail','php-mysql','php-gd']: ensure => installed, }
+      package { ['git','imagemagick','ncftp','php','sendmail','php-mysql','php-gd','composer']: ensure => installed, }
     }
 
     default: {
@@ -84,9 +99,17 @@ class medialibrary::all_in_one(
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/medialibrary-publisher',
+    revision => $medialib_revision,
     require  => [Package['git']],
+    notify   => Exec['/usr/bin/composer install'],
   }
 
+  exec {'/usr/bin/composer install':
+    refreshonly => true,
+    cwd         => '/opt/medialibrary',
+    environment => 'COMPOSER_HOME=/opt',
+    require     => Package['composer'],
+  }
 
   file {'/opt/check_offload_logs.sh' :
     ensure  => 'present',
@@ -113,9 +136,9 @@ class medialibrary::all_in_one(
   }
 
   if $streets == 'hiera_based' {
-    create_resources('medialibrary::street', hiera('medialibrary::street', {}))
+    create_resources('medialibrary::street_all_in_one', hiera('medialibrary::street', {}))
   }else{
-    create_resources('medialibrary::street', parseyaml($streets))
+    create_resources('medialibrary::street_all_in_one', parseyaml($streets))
   }
   
 	##### mediaserver
@@ -162,6 +185,7 @@ class medialibrary::all_in_one(
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/medialibrary-mediaserver',
+    revision => $medialib_web_revision,
     #source   => 'git@github.com:naturalis/MediaServer.git',
     #user     => 'root',
     require  => Package['git'],
@@ -174,7 +198,7 @@ class medialibrary::all_in_one(
     require => Vcsrepo['/var/www/mediaserver'],
   }
 
-  file {'/var/www/mediaserver/log':
+  file { $log_directory :
     ensure  => directory,
     mode    => '0660',
     require => Vcsrepo['/var/www/mediaserver'],
