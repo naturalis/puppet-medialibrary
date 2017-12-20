@@ -137,7 +137,7 @@ class medialibrary::harvester (
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/medialibrary-publisher',
-		revision => $medialib_revision
+		revision => $medialib_revision,
     #source   => 'git@github.com:naturalis/MediaPublisher.git',
     #user     => 'root',
     notify   => Exec['/usr/bin/composer install'],
