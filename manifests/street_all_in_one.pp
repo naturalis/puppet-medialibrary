@@ -55,6 +55,13 @@ define medialibrary::street_all_in_one(
   $cleaner_minDaysOld                 = $medialibrary::all_in_one::cleaner_minDaysOld
   $cleaner_sweep                      = $medialibrary::all_in_one::cleaner_sweep
   $cleaner_unixRemove                 = $medialibrary::all_in_one::cleaner_unixRemove
+  
+  $aws_region                         = $medialibrary::all_in_one::aws_region
+  $aws_version                        = $medialibrary::all_in_one::aws_version
+  $aws_bucket                         = $medialibrary::all_in_one::aws_bucket
+  $aws_access_key		      = $medialibrary::all_in_one::aws_access_key
+  $aws_secret_key		      = $medialibrary::all_in_one::aws_secret_key
+
 
 
 
