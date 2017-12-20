@@ -56,6 +56,12 @@ define medialibrary::street(
   $cleaner_sweep                      = $medialibrary::harvester::cleaner_sweep
   $cleaner_unixRemove                 = $medialibrary::harvester::cleaner_unixRemove
 
+  $aws_region                         = $medialibrary::harvester::aws_region
+  $aws_version                        = $medialibrary::harvester::aws_version
+  $aws_bucket                         = $medialibrary::harvester::aws_bucket
+  $aws_access_key										  = $medialibrary::harvester::aws_access_key
+  $aws_secret_key		                  = $medialibrary::harvester::aws_secret_key
+
 
 
   #logical derivitives

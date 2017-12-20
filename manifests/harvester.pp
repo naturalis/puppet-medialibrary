@@ -91,6 +91,15 @@ class medialibrary::harvester (
   $share_activedirectory_domain       = undef,
   $share_win_domain_admin_user        = undef,
   $share_win_domain_admin_password    = undef,
+
+  $medialib_revision								  = 'master',
+
+  $aws_region												  = 'eu-central-1',
+  $aws_version											  = 'latest',
+  $aws_bucket												  = 'medialib-archive',
+  $aws_access_key,
+  $aws_secret_key,
+
   ) {
 
   #package { ['subversion','imagemagick','ncftp','php5','php5-mysql']: ensure => installed, }
@@ -101,7 +110,7 @@ class medialibrary::harvester (
       package { ['git','ImageMagick','ncftp','php','php-mysql','sendmail']: ensure => installed, }
     }
     debian, ubuntu: {
-      package { ['git','imagemagick','ncftp','php5','php5-mysql','sendmail']: ensure => installed, }
+      package { ['git','imagemagick','ncftp','php5','php5-mysql','sendmail','php5-gd']: ensure => installed, }
     }
 
     default: {
@@ -128,12 +137,20 @@ class medialibrary::harvester (
     ensure   => present,
     provider => 'git',
     source   => 'https://github.com/naturalis/medialibrary-publisher',
+		revision => $medialib_revision
     #source   => 'git@github.com:naturalis/MediaPublisher.git',
     #user     => 'root',
+    notify   => Exec['/usr/bin/composer install'],
     require  => [Package['git'],Class['::medialibrary::deploykey']],
   }
 
-  class {'::nfs':
+  exec {'/usr/bin/composer install':
+    refreshonly => true,
+    cwd         => '/opt/medialibrary',
+    environment => 'COMPOSER_HOME=/opt',
+  }
+  
+	class {'::nfs':
     client_enabled => true,
     server_enabled => false,
   }
