@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+WARNING_LEVEL="-<%= @chkwarninghours %> hour"
+ERROR_LEVEL="-<%= @chkcriticalhours %> hour"
+MAX_JOB_RUNTIME="-<%= @chkmaxruntimehours %> hour"
+HOST=`hostname`
+
+### --- LOGIC --- ###
+
+# check if backup process is running
+NUM_OF_PROC=`ps aux | grep 'aws s3 sync' | grep -v 'grep' | wc -l`
+if [ "$NUM_OF_PROC" = "1" ]; then
+    SINCE=`ps aux | grep 'aws s3 sync' | grep -v 'grep' | awk '{print $9}'`
+    CUR=`date +%s -d "$SINCE"`
+    MAX=`date +%s -d "$MAX_JOB_RUNTIME"`
+    if [ "$MAX" -gt  "$CUR" ] ; then
+        echo "ERROR: backup job is running longer than $MAX_JOB_RUNTIME"
+    exit 2
+    fi
+fi
+
+# check if last backup is long time ago.
+LAST_BACKUP=`cat /var/log/aws/s3backup.log.1 /var/log/aws/s3backup.log 2>/dev/null | grep 'sync succeeded' | tail -n 1 | awk -F '--' '{print $1}'`
+LAST_BACKUP_FAILED=`cat /var/log/aws/s3backup.log.1 /var/log/aws/s3backup.log  2>/dev/null | grep 'sync failed' | tail -n 1 | awk -F '--' '{print $1}'`
+LAST_BACKUP_EPOCH=`date +%s -d "$LAST_BACKUP"`
+LAST_BACKUP_FAILED_EPOCH=`date +%s -d "$LAST_BACKUP_FAILED"`
+PREV_TIME_BACKUP_WARN=`date +%s -d "$WARNING_LEVEL"`
+PREV_TIME_BACKUP_ERROR=`date +%s -d "$ERROR_LEVEL"`
+
+if [ "$LAST_BACKUP" = "" ]; then
+    echo "ERROR: No backup entries succeeded or failed are found in the logs"
+    exit 2
+fi
+
+if [ "$LAST_BACKUP_FAILED_EPOCH" -gt "$LAST_BACKUP_EPOCH" ] && [ "$LAST_BACKUP_FAILED" != "" ]; then
+    echo "ERROR: Last backup ended in failed state, backup needed. Last backup was $LAST_BACKUP"
+    exit 2
+fi
+
+if [ "$PREV_TIME_BACKUP_ERROR" -gt "$LAST_BACKUP_EPOCH" ]; then
+    echo "ERROR: No backup since $ERROR_LEVEL, backup needed. Last backup was $LAST_BACKUP"
+    exit 2
+fi
+
+if [ "$PREV_TIME_BACKUP_WARN" -gt "$LAST_BACKUP_EPOCH" ]; then
+    echo "WARNING: No backup since $WARNING_LEVEL, backup needed. Last backup was $LAST_BACKUP"
+    exit 1
+fi
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') -- last backup was ${LAST_BACKUP} -- Backup is ok"
+exit 0

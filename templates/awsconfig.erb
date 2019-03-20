@@ -1,0 +1,10 @@
+[default]
+aws_access_key_id=<%= @aws_access_key_id %>
+aws_secret_access_key=<%= @aws_secret_access_key %>
+s3 =
+  max_concurrent_requests = 64
+  max_queue_size = 10000
+  multipart_threshold = 64MB
+  multipart_chunksize = 16MB
+  max_bandwidth = 100MB/s
+  addressing_style = path
