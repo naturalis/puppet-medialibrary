@@ -58,8 +58,9 @@ class medialibrary::mediaserver (
         allow_override => 'All' }
         ],
     ssl        => true,
-    ssl_cert   => '/etc/letsencrypt/live/medialib.naturalis.nl/fullchain.pem',
+    ssl_cert   => '/etc/letsencrypt/live/medialib.naturalis.nl/cert.pem',
     ssl_key    => '/etc/letsencrypt/live/medialib.naturalis.nl/privkey.pem',
+    ssl_chain  => '/etc/letsencrypt/live/medialib.naturalis.nl/chain.pem',
     require    => Apache::Vhost[$media_server_url],
   }
 

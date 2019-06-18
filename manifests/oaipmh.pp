@@ -240,7 +240,7 @@ class medialibrary::oaipmh (
       section           => '',
       key_val_separator => '=',
       setting           => 'media_server_base_url',
-      value             => "http\://${media_server_url}",
+      value             => "https\://${media_server_url}",
       ensure            => present,
       require           => Exec['clean_default_config'],
       notify            => Service['tomcat'],

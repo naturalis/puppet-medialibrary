@@ -25,7 +25,7 @@ class medialibrary::dataserver(
 
   file { '/var/log/aws':
     ensure        => 'directory',
-    mode          => '0700'
+    mode          => '0755'
   }
 
   file { '/root/.aws':

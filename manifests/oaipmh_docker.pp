@@ -86,7 +86,7 @@ class medialibrary::oaipmh_docker(
 
   ini_setting { 'ini_media_server_base_url':
     setting => 'media_server_base_url',
-    value   => "http\://${media_server_url}",
+    value   => "https\://${media_server_url}",
   }
 
   ini_setting { 'ini_db_driver':
